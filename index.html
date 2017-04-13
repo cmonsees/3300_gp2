@@ -1,0 +1,327 @@
+<html>
+  <head>
+    <title>Bank Failures</title>
+    <link rel="stylesheet" type="text/css" href="styles/styles.css">
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="//d3js.org/topojson.v1.min.js"></script>
+  </head>
+
+  <body>
+
+    <div id='wrapper'>
+      <br><br>
+      <script>
+        var fipsDict = { 'AL': 01, 'AK': 02, 'AZ': 04, 'AR': 05, 'CA': 06,
+                         'CO': 08, 'CT': 09, 'DE': 10, 'DC': 11, 'FL': 12,
+                         'GA': 13, 'HI': 15, 'ID': 16, 'IL': 17, 'IN': 18,
+                         'IA': 19, 'KS': 20, 'KY': 21, 'LA': 22, 'ME': 23,
+                         'MD': 24, 'MA': 25, 'MI': 26, 'MN': 27, 'MI': 28,
+                         'MO': 29, 'MT': 30, 'NE': 31, 'NV': 32, 'NH': 33,
+                         'NJ': 34, 'NM': 35, 'NY': 36, 'NC': 37, 'ND': 38,
+                         'OH': 39, 'OK': 40, 'OR': 41, 'PA': 42, 'RI': 44,
+                         'SC': 45, 'SD': 46, 'TN': 47, 'TX': 48, 'UT': 49,
+                         'VT': 50, 'VA': 51, 'WA': 53, 'WV': 54, 'WI': 55,
+                         'WY': 56, };
+        var timeData = [];
+
+        function searchTimeData(arrayTime, state, year) {
+          for (var t= 0; t< arrayTime.length; t++) {
+            if (arrayTime[t].state == state && arrayTime[t].year == year) {
+              return arrayTime[t];
+            }
+          }
+          return null;
+        }
+
+        function yearCounts(arrayTime, year) {
+          var max = arrayTime[0].count;
+          var min = arrayTime[0].count;
+          for (var t= 0; t< arrayTime.length; t++) {
+            if (arrayTime[t].count > max && arrayTime[t].year == year) { max = arrayTime[t].count; }
+            if (arrayTime[t].count < min && arrayTime[t].year == year) { min = arrayTime[t].count; }
+          }
+          return ([min, max]);
+        }
+
+        function yearAssets(arrayTime, year) {
+          var max = arrayTime[0].totalAssets;
+          var min = arrayTime[0].totalAssets;
+          for (var t= 0; t< arrayTime.length; t++) {
+            if (arrayTime[t].totalAssets > max && arrayTime[t].year == year) { max = arrayTime[t].totalAssets; }
+            if (arrayTime[t].totalAssets < min && arrayTime[t].year == year) { min = arrayTime[t].totalAssets; }
+          }
+          return ([min, max]);
+        }
+
+        function assetsMinMax(arrayTime) {
+          var max = arrayTime[0].totalAssets;
+          var min = arrayTime[0].totalAssets;
+          for (var t= 0; t< arrayTime.length; t++) {
+            if (arrayTime[t].totalAssets > max) { max = arrayTime[t].totalAssets; }
+            if (arrayTime[t].totalAssets < min) { min = arrayTime[t].totalAssets; }
+          }
+          return ([min, max]);
+        }
+
+        function formatData(arrayBanks, data) {
+          // Set up bank array
+          var failDateRaw = data['Failure Date'].slice(0,data['Failure Date'].length-1);
+          var slashFirst = failDateRaw.indexOf("/");
+          var slashLast = failDateRaw.lastIndexOf("/");
+          var failDateMonth = failDateRaw.substring(0,slashFirst);
+          var failDateDay = failDateRaw.substring(slashFirst+1,slashLast);
+          var failDateYear = failDateRaw.substring(slashLast+1,failDateRaw.length);
+          if (failDateMonth.length == 1) { failDateMonth = "0"+failDateMonth; }
+          if (failDateDay.length == 1) { failDateDay = "0"+failDateDay; }
+          var failDateObj = new Date(failDateYear, parseInt(failDateMonth)-1, failDateDay);
+
+          var headquartersComma = data.Headquarters.indexOf(",");
+          var headquartersState = data.Headquarters.slice(headquartersComma+2, data.Headquarters.length);
+
+          arrayBanks.push({
+            name: data['Institution Name'],
+            headquartersCity: data.Headquarters,
+            headquartersState: headquartersState,
+            headquartersFips: fipsDict[headquartersState],
+            institutionType: data['Institution Type'],
+            charterType: data['Charter Type'],
+            transactionType: data['Transaction Type'],
+            failDate: failDateObj,
+            totalDeposits: parseInt(data['Total Deposits']),
+            totalAssets: parseInt(data['Total Assets'])
+          });
+
+          // Set up time array
+          var match = searchTimeData(timeData, headquartersState, failDateObj.getFullYear());
+          if (match == null) {
+            timeData.push({ state: headquartersState,
+                            year: failDateObj.getFullYear(),
+                            count: 1,
+                            totalDeposits: parseInt(data['Total Deposits']),
+                            totalAssets: parseInt(data['Total Assets'])
+                          });
+          } else {
+            match.count++;
+            match.totalDeposits += parseInt(data['Total Deposits']);
+            match.totalAssets += parseInt(data['Total Assets']);
+          }
+        }
+
+        var bankData = [];
+        d3.queue()
+          .defer(d3.csv, "data/banks.csv", function(data) { formatData(bankData, data); })
+          .defer(function(callback) { d3.json("data/us.json", function(data) { callback(null, data); }) })
+          .awaitAll(function(error, data) {
+            if (error) { console.log("Error: "+error); }
+            else {
+              // Set up document
+              var wrapper = document.getElementById("wrapper");
+              var svg = d3.select(wrapper).append("svg");
+              var height = 600;
+              svg.attr("width","60%")
+                 .attr("height",height);
+              var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
+
+              svg.append("text")
+                .attr("id", "choro_title")
+                .attr("x", 0)
+                .attr("y", 24)
+                .style("font-size", "28px")
+                .style("font-weight", 700)
+                .text("Bank Failures in 1934");
+
+              svg.append("text")
+                .attr("id", "choro_subtitle")
+                .attr("x", 0)
+                .attr("y", 50)
+                .style("font-size", "18px")
+                .style("font-weight", 400)
+                .style("fill", d3.hsl(0, 1, .65))
+                .text("Great Depression");
+
+              var svg2 = d3.select(wrapper).append("svg");
+              svg2.attr("width","35%")
+                 .attr("height", height)
+                 .style("float", "right");
+              var svg2_width = document.getElementsByTagName("svg")[1].offsetWidth;
+
+              svg2.append("text")
+                .attr("id", "svg2_title")
+                .attr("x", 0)
+                .attr("y", 24)
+                .style("font-size", "28px")
+                .style("font-weight", 700)
+                .text("Biggest failure of 1934");
+
+              svg2.append("text")
+                .attr("id", "svg2_subtitle")
+                .attr("x", 0)
+                .attr("y", 50)
+                .style("font-size", "18px")
+                .style("font-weight", 400)
+                .text("BANK OF AMERICA TRUST CO.");
+
+              var currentYear = 1934;
+              // Map setup
+              var us = data[1];
+              var projection = d3.geoAlbersUsa()
+                  .scale(900)
+                  .translate([width / 2, height / 2])
+                  .precision(.1);
+              var path = d3.geoPath()
+                  .projection(projection);
+              var graticule = d3.geoGraticule()
+                  .extent([[-98 - 45, 38 - 45], [-98 + 45, 38 + 45]])
+                  .step([5, 5]);
+
+              function showMap(year) {
+                var yearMinMax = yearAssets(timeData, year);
+                var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
+
+                svg.append("g") // individual state fills
+                  .attr("class", "state")
+                  .selectAll("path")
+                  .data(topojson.feature(us, us.objects.states).features)
+                  .enter().append("path")
+                    .attr("fill", function(d) {
+                      // Find matching state
+                      for (n in timeData) {
+                        var state = timeData[n].state;
+                        if (fipsDict[state] == d.id && timeData[n].year == year) {
+                          return d3.hsl(0, cScale(timeData[n].totalAssets), .8);
+                        }
+                      }
+                    })
+                    .attr("d", path);
+              }
+
+              function updateMap(year) {
+                var updateSubtitle = false;
+                var yearMinMax = yearAssets(timeData, year);
+                var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
+                var biggestFail = null;
+                var biggestFailAssets = 0;
+
+                svg.selectAll("path")
+                    .transition()
+                    .attr("fill", function(d) {
+                      if (d != null) {
+                        // Find matching state
+                        for (n in timeData) {
+                          var state = timeData[n].state;
+                          if (fipsDict[state] == d.id && timeData[n].year == year) {
+                            if (timeData[n].totalAssets > biggestFailAssets) {
+                              for (b in bankData) {
+                                if (bankData[b].totalAssets == timeData[n].totalAssets) {
+                                  biggestFail = bankData[b];
+                                }
+                              }
+                            }
+                            return d3.hsl(0, cScale(timeData[n].totalAssets), .8);
+                          }
+                        }
+                      }
+                    })
+                    .attr("d", path);
+
+                svg.select("#choro_title")
+                  .text("Bank Failures in "+year);
+                svg2.select("#svg2_title")
+                  .text("Biggest Failure of "+year);
+                if (biggestFail == null) {
+                  svg2.select("#svg2_subtitle")
+                    .text("No failures");
+                } else {
+                  svg2.select("#svg2_subtitle")
+                    .text(biggestFail.name);
+                }
+
+                // Update subtitles
+                for (y in importantRanges) {
+                  var compareRange = importantRanges[y];
+                  if (year >= compareRange.start && year <= compareRange.end) {
+                    svg.select("#choro_subtitle")
+                      .text(compareRange.desc);
+                    updateSubtitle = true;
+                  }
+                }
+                if (!updateSubtitle) {
+                  svg.select("#choro_subtitle")
+                    .text("");
+                }
+              }
+
+              showMap(currentYear);
+
+              // Create slider
+              var yearScale = d3.scaleLinear().domain([0,width]).range([1934,2016]);
+
+              var xScale = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([4,width-8]);
+              var ticks = xScale.ticks(51);
+              var tickFormat = xScale.tickFormat(51);
+              ticks.map(tickFormat);
+              var xAxis = d3.axisBottom(xScale)
+                          .ticks(20);
+              var plotXAxis = svg.append("g")
+                .attr("transform", "translate(4,"+(height-18)+")")
+                .call(xAxis);
+
+              var assets = assetsMinMax(timeData);
+              var yScale = d3.scaleLog().domain([assets[0], assets[1]]).range([40,0]);
+
+              var area = d3.area()
+                .x(function(d) { return xScale(new Date(d.year, 0, 1)) })
+                .y1(function(d) { return yScale(d.totalDeposits) })
+                .y0(40)
+
+              var assetsSlider = svg.append("g")
+                .attr("transform", "translate(0,"+(height-57)+")")
+              assetsSlider.append("path")
+                .datum(timeData)
+                .attr("fill", "#d9d9d9")
+                .attr("d", area);
+
+              var importantRanges = [ { start: 1934, end: 1939, desc: "Great Depression" },
+                                      { start: 1982, end: 1994, desc: "Saving and Loans Crisis" },
+                                      { start: 2007, end: 2010, desc: "Great Recession" }];
+              for (e in importantRanges) {
+                var rangeStart = xScale(new Date(importantRanges[e].start, 0, 1));
+                var rangeEnd = xScale(new Date(importantRanges[e].end, 0, 1));
+                var rangeWidth = rangeEnd-rangeStart;
+                assetsSlider.append("rect")
+                  .attr("width", rangeWidth)
+                  .attr("height", 8)
+                  .attr("x", rangeStart)
+                  .attr("y", 34)
+                  .attr("fill", d3.hsl(0, 1, .75))
+                  .attr("rx", 4)
+                  .attr("ry", 4);
+              }
+
+
+              var assetsHandle = assetsSlider.insert("rect")
+                .attr("height", 25)
+                .attr("width",8)
+                .attr("x", 0)
+                .attr("y", 17)
+                .attr("rx",4)
+                .attr("fill", "#000")
+                .call(d3.drag()
+                        .on("start drag", function() {
+                            var newYear = parseInt(yearScale(d3.event.x));
+
+                            if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
+                              assetsHandle.attr("x", d3.event.x-4);
+                              currentYear = newYear;
+                              updateMap(newYear);
+                            }
+                        }));
+            }
+          });
+
+
+
+      </script>
+    </div>
+  </body>
+</html>
