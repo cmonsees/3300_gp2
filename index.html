@@ -313,6 +313,19 @@
               var assetsSlider = svg.append("g")
                 .attr("transform", "translate(0,"+(height-57)+")")
                 .attr("id", "sliderPath")
+                .on("click", function(){
+                  //When the slider is clicked the handler moves and updates the slider
+                  var slider = svg.select("#assetsHandle");
+                   var newYear = parseInt(yearScale(d3.event.x))-17;
+                   //console.log(newYear);
+                   //console.log(d3.event.x);
+                 slider.attr("x", yearScale.invert(newYear));
+                 if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
+                              //assetsHandle.attr("x", d3.event.x-4);
+                              currentYear = newYear;
+                              updateMap(newYear);
+                            }
+                })
               assetsSlider.append("path")
                 .datum(timeData)
                 .attr("fill", "#d9d9d9")
@@ -343,6 +356,7 @@
                 .attr("y", 17)
                 .attr("rx",4)
                 .attr("fill", "#000")
+                .attr("id", "assetsHandle")
                 .call(d3.drag()
                         .on("start drag", function() {
                             var newYear = parseInt(yearScale(d3.event.x));
