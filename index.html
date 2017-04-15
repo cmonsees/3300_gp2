@@ -179,10 +179,11 @@
                 var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
 
                 svg.append("g") // individual state fills
-                  .attr("class", "state")
+                  .attr("id", "stateMap")
                   .selectAll("path")
                   .data(topojson.feature(us, us.objects.states).features)
                   .enter().append("path")
+                  
                     .attr("fill", function(d) {
                       // Find matching state
                       for (n in timeData) {
@@ -191,6 +192,7 @@
                           return d3.hsl(0, cScale(timeData[n].totalAssets), .8);
                         }
                       }
+                      return "#d9d9d9";
                     })
                     .attr("d", path);
               }
@@ -201,8 +203,8 @@
                 var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
                 var biggestFail = null;
                 var biggestFailAssets = 0;
-
-                svg.selectAll("path")
+                var stateMap = d3.select("#stateMap");
+                stateMap.selectAll("path")
                     .transition()
                     .attr("fill", function(d) {
                       if (d != null) {
@@ -220,6 +222,7 @@
                             return d3.hsl(0, cScale(timeData[n].totalAssets), .8);
                           }
                         }
+                        return "#d9d9d9";
                       }
                     })
                     .attr("d", path);
@@ -276,9 +279,11 @@
 
               var assetsSlider = svg.append("g")
                 .attr("transform", "translate(0,"+(height-57)+")")
+                .attr("id", "sliderPath")
               assetsSlider.append("path")
                 .datum(timeData)
                 .attr("fill", "#d9d9d9")
+
                 .attr("d", area);
 
               var importantRanges = [ { start: 1934, end: 1939, desc: "Great Depression" },
