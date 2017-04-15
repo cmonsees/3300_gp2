@@ -7,11 +7,58 @@ body {
 #wrapper {
   width: 80%;
   margin: auto;
+  padding-top: 75px;
+  padding-bottom: 150px;
+}
+
+.col1 {
+  width: 60%;
+  display: inline;
+  float: left;
+  margin-bottom: 50px;
+}
+
+.col2 {
+  width: 35%;
+  display: inline;
+  float: right;
+  margin-bottom: 50px;
+}
+
+.text_col {
+  column-count: 2;
+  column-gap: 50px;
+}
+
+.text_col > p {
+  margin-top: 0px;
 }
 
 .state {
   fill: #d9d9d9;
   stroke: #ccc;
+}
+
+h1 {
+  font-family: 'Alfa Slab One', sans-serif;
+  font-size: 55px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 50px;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+h2 {
+  font-family: 'Alfa Slab One', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 43px;
+  margin-top: 0;
+  margin-bottom: 30px;
+  color: #e5e5e5;
+  text-align: right;
 }
 
 svg {
