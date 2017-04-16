@@ -10,38 +10,65 @@
   <body>
 
     <div id='wrapper'>
-        <div class='col1'>
-          <h1 style='margin-bottom:10px;'>Bank Failures in the United States</h1>
-          <p style='margin-top:0; font-size:22px; font-weight:700; color: #cccccc'>1934 &ndash; 2016</p>
+      <div class='col1'>
+        <h1 style='margin-bottom:10px;'>Bank Failures in the United States</h1>
+        <p style='margin-top:0; font-size:22px; font-weight:700; color: #cccccc; font-family: Alfa Slab One, sans-serif'>1934 &ndash; 2016</p>
 
-          <div class='text_col'>
-            <p>
-              Between the middle of the Great Depression in 1934 and 2016, nearly 3,500 banks failed
-              in the United States. These failures spanned every level of financial organization,
-              from tiny local savings unions to the biggest national banks and everything in between.
-              Bank failures highlight not only how government and corporate policy changes affect
-              economic stability nationwide, but also track the westward movement of the country's
-              financial center. Moreover, the geographic distribution of failures sheds light on
-              the often regional patterns of instability which emerge following even a single bank's
-              insolvency, as its failure to secure the assets of other local and regional banks
-              leads to a chain reaction of failures.
+        <div class='text_col'>
+          <p>
+            Between the middle of the Great Depression in 1934 and 2016, nearly 3,500 banks failed
+            in the United States. These failures spanned every level of financial organization,
+            from tiny local savings unions to the biggest national banks and everything in between.
+            Bank failures highlight not only how government and corporate policy changes affect
+            economic stability nationwide, but also track the westward movement of the country's
+            financial center. Moreover, the geographic distribution of failures sheds light on
+            the often regional patterns of instability which emerge following even a single bank's
+            insolvency, as its failure to secure the assets of other local and regional banks
+            leads to a chain reaction of failures.
 
-              The map belows displays the states which experienced bank failures in a given year, with
-              the amount of assets lost in each state represented a color scale. The slider at the
-              bottom surfaces the total assets lost nationwide each year on a logarithmic scale; a
-              linear scale shows only the dramatic losses during the Savings and Loan Crisis and
-              the Great Recession.
-            </p>
-          </div>
+            The map belows displays the states which experienced bank failures in a given year, with
+            the amount of assets lost in each state represented a color scale. The slider at the
+            bottom surfaces the total assets lost nationwide each year on a logarithmic scale; a
+            linear scale shows only the dramatic losses during the Savings and Loan Crisis and
+            the Great Recession.
+          </p>
         </div>
+      </div>
 
-        <div class='col2'>
-          <h2>
-            "Between the middle of the Great Depression in 1934 and 2016, nearly 3,500 banks failed
-            in the United States"
-          </h2>
+      <div class='col2'>
+        <h2 style='text-align: left; margin-bottom: 0'>
+          "Between the middle of the Great Depression in 1934 and the end of 2016, nearly 3,500 banks at every level failed
+          in the United States"
+        </h2>
+      </div>
+
+      <div id='viz' style='margin-bottom:65px'></div>
+
+      <div class='col1' style='width:35%;'>
+        <h2 id='crisis_subtitle'>
+          "The Great Depression was the deepest economic downturn in the history of the United States"
+        </h2>
+      </div>
+
+      <div class='col2' style='width:60%;'>
+        <h2 style='color: #000; text-align: left' id='crisis_title'>Great Depression</h2>
+        <div class='text_col'>
+          <p id='crisis_text'>
+            The Great Depression was the deepest and longest-lasting economic downturn
+            in the history of the Western industrialized world. In the United States, the Great
+            Depression began soon after the stock market crash of October 1929, which sent Wall
+            Street into a panic and wiped out millions of investors. Over the next several years,
+            consumer spending and investment dropped, causing steep declines in industrial output
+            and rising levels of unemployment as failing companies laid off workers. By 1933,
+            when the Great Depression reached its nadir, some 13 to 15 million Americans were
+            unemployed and nearly half of the country’s banks had failed. Though the relief and
+            reform measures put into place by President Franklin D. Roosevelt helped lessen the
+            worst effects of the Great Depression in the 1930s, the economy would not fully turn
+            around until after 1939, when World War II kicked American industry into high gear.
+          </p>
         </div>
-      <br><br>
+      </div>
+    </div>
 
       <script>
         var fipsDict = { 'AL': 01, 'AK': 02, 'AZ': 04, 'AR': 05, 'CA': 06,
@@ -148,8 +175,8 @@
             if (error) { console.log("Error: "+error); }
             else {
               // Set up document
-              var wrapper = document.getElementById("wrapper");
-              var svg = d3.select(wrapper).append("svg");
+              var viz = document.getElementById("viz");
+              var svg = d3.select(viz).append("svg");
               var height = 600;
               svg.attr("width","60%")
                  .attr("height",height);
@@ -161,6 +188,7 @@
                 .attr("y", 24)
                 .style("font-size", "22px")
                 .style("font-weight", 700)
+                .style("font-family", "'Alfa Slab One', sans-serif")
                 .text("Bank Failures in 1934");
 
               svg.append("text")
@@ -172,7 +200,7 @@
                 .style("fill", d3.hsl(0, 1, .65))
                 .text("Great Depression");
 
-              var svg2 = d3.select(wrapper).append("svg");
+              var svg2 = d3.select(viz).append("svg");
               svg2.attr("width","35%")
                  .attr("height", height)
                  .style("float", "right");
@@ -184,6 +212,7 @@
                 .attr("y", 24)
                 .style("font-size", "22px")
                 .style("font-weight", 700)
+                .style("font-family", "'Alfa Slab One', sans-serif")
                 .text("Biggest failure of 1934");
 
               svg2.append("text")
@@ -277,7 +306,10 @@
                   var compareRange = importantRanges[y];
                   if (year >= compareRange.start && year <= compareRange.end) {
                     svg.select("#choro_subtitle")
-                      .text(compareRange.desc);
+                      .text(compareRange.name);
+                    document.getElementById("crisis_title").innerHTML = compareRange.name;
+                    document.getElementById("crisis_subtitle").innerHTML = compareRange.subtitle;
+                    document.getElementById("crisis_text").innerHTML = compareRange.desc;
                     updateSubtitle = true;
                   }
                 }
@@ -290,15 +322,16 @@
               showMap(currentYear);
 
               // Create slider
-              var yearScale = d3.scaleLinear().domain([0,width]).range([1934,2016]);
+              var yearScale = d3.scaleLinear().domain([0,width]).range([1934,2016]); // converts pixel-coordinates to years
 
-              var xScale = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([4,width-8]);
+              var xScale = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([4,width-8]); // converts years to pixel coordinates
               var ticks = xScale.ticks(51);
               var tickFormat = xScale.tickFormat(51);
               ticks.map(tickFormat);
               var xAxis = d3.axisBottom(xScale)
-                          .ticks(20);
+                .ticks(20)
               var plotXAxis = svg.append("g")
+                .attr("class", "axis")
                 .attr("transform", "translate(4,"+(height-18)+")")
                 .call(xAxis);
 
@@ -308,7 +341,7 @@
               var area = d3.area()
                 .x(function(d) { return xScale(new Date(d.year, 0, 1)) })
                 .y1(function(d) { return yScale(d.totalDeposits) })
-                .y0(40)
+                .y0(39)
 
               var assetsSlider = svg.append("g")
                 .attr("transform", "translate(0,"+(height-57)+")")
@@ -332,9 +365,27 @@
 
                 .attr("d", area);
 
-              var importantRanges = [ { start: 1934, end: 1939, desc: "Great Depression" },
-                                      { start: 1982, end: 1994, desc: "Saving and Loans Crisis" },
-                                      { start: 2007, end: 2010, desc: "Great Recession" }];
+              var importantRanges = [ { start: 1934,
+                                        end: 1939,
+                                        name: "Great Depression",
+                                        subtitle: "The Great Depression was the deepest economic downturn in the history of the United States",
+                                        desc: "The Great Depression was the deepest and longest-lasting economic downturn in the history of the Western industrialized world. In the United States, the Great Depression began soon after the stock market crash of October 1929, which sent Wall Street into a panic and wiped out millions of investors. Over the next several years, consumer spending and investment dropped, causing steep declines in industrial output and rising levels of unemployment as failing companies laid off workers. By 1933, when the Great Depression reached its nadir, some 13 to 15 million Americans were unemployed and nearly half of the country’s banks had failed. Though the relief and reform measures put into place by President Franklin D. Roosevelt helped lessen the worst effects of the Great Depression in the 1930s, the economy would not fully turn around until after 1939, when World War II kicked American industry into high gear."
+                                        // Adapted from: http://www.history.com/topics/great-depression
+                                      },
+                                      { start: 1982,
+                                        end: 1994,
+                                        name: "Savings and Loans Crisis",
+                                        subtitle: "The S&L Crisis is arguably the most catastrophic collapse of the banking industry since the Great Depression",
+                                        desc: "The Savings and Loan (S&L) Crisis began under the volatile interest rate climate of the 1970s, when vast numbers of depositors removed their money from the S&L institutions and deposited it in money market funds. This allowed for higher interest rates, because the funds were not governed by Regulation Q. Once regulations were loosened, S&Ls began engaging in high-risk activities, such as commercial real estate lending and investments in junk bonds, to cover losses. Depositors in S&Ls continued to funnel money into these risky endeavors because their deposits were insured by the Federal Savings and Loan Insurance Corporation (FSLIC). Widespread corruption and other factors led to the insolvency of the FSLIC, the $124 billion bailout of junk bond investments and the liquidation of more than 700 S&Ls by the Resolution Trust Corporation. The S&L Crisis is arguably the most catastrophic collapse of the banking industry since the Great Depression. Across the United States, more than 1,000 S&Ls failed by 1989, essentially ending one of the most secure sources of home mortgages."
+                                        // Adapted from: http://www.investopedia.com/terms/s/sl-crisis.asp
+                                      },
+                                      { start: 2007,
+                                        end: 2010,
+                                        name: "Great Recession",
+                                        subtitle: "As a result of the Great Recession, the United States alone shed more than 7.5 million jobs",
+                                        desc: "During the American housing boom of the mid-2000s, financial institutions began marketing mortgage-backed securities (MBSs) and sophisticated derivative products at unprecedented levels. When the real estate market collapsed in 2007, these securities declined precipitously in value, jeopardizing the solvency of over-leveraged banks and financial institutions in the U.S. and Europe. Although the global economy was already feeling the grip of a credit crisis that had been unfolding since 2007, things came to a head a year later with the bankruptcy of Lehman Brothers, the country’s fourth-largest investment bank, in September 2008. The contagion quickly spread to other economies around the world, most notably in Europe. As a result of the Great Recession, the United States alone shed more than 7.5 million jobs, causing its unemployment rate to double. Further, American households lost roughly $16 trillion of net worth as a result of the stock market plunge."
+                                        // Adapted from: http://www.investopedia.com/terms/g/great-recession.asp
+                                      }];
               for (e in importantRanges) {
                 var rangeStart = xScale(new Date(importantRanges[e].start, 0, 1));
                 var rangeEnd = xScale(new Date(importantRanges[e].end, 0, 1));
@@ -369,10 +420,6 @@
                         }));
             }
           });
-
-
-
       </script>
-    </div>
   </body>
 </html>

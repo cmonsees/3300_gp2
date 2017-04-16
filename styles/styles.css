@@ -11,15 +11,33 @@ body {
   padding-bottom: 150px;
 }
 
+.axis line, .axis path {
+  stroke: #cccccc;
+}
+
 .col1 {
   width: 60%;
+  display: inline;
+  float: left;
+  margin-bottom: 65px;
+}
+
+.col2 {
+  width: 35%;
+  display: inline;
+  float: right;
+  margin-bottom: 50px;
+}
+
+.col1_reverse {
+  width: 35%;
   display: inline;
   float: left;
   margin-bottom: 50px;
 }
 
-.col2 {
-  width: 35%;
+.col2_reverse {
+  width: 60%;
   display: inline;
   float: right;
   margin-bottom: 50px;
@@ -50,6 +68,18 @@ h1 {
 }
 
 h2 {
+  font-family: 'Alfa Slab One', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 43px;
+  margin-top: 0;
+  margin-bottom: 30px;
+  color: #e5e5e5;
+  text-align: right;
+}
+
+h3 {
   font-family: 'Alfa Slab One', sans-serif;
   font-size: 38px;
   font-weight: 700;
