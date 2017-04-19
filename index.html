@@ -358,7 +358,6 @@
                   .selectAll("path")
                   .data(topojson.feature(us, us.objects.states).features)
                   .enter().append("path")
-
                     .attr("fill", function(d) {
                       // Find matching state
                       for (n in timeData) {
@@ -369,7 +368,6 @@
                       }
                       return "#d9d9d9";
                     })
-<<<<<<< HEAD
                     .attr("d", path)
                     .on('click', function(d){
                         if (selectedState!= null){
@@ -380,7 +378,7 @@
                             .style("stroke-width", "3px");
                         selectedState = d3.select(this);
                         zoomInfo(d);
-                    })}
+                    });
 
                   var popData = [];
 
@@ -408,8 +406,6 @@
                       id.text(popData);
                       //
                   }
-=======
-                    .attr("d", path);
 
                 var yearMin = parseInt(yearMinMax[0]+"000");
                 var yearMax = parseInt(yearMinMax[1]+"000");
@@ -418,7 +414,6 @@
                 svg.select("#legendMax")
                   .text("-$"+yearMax)
             }
->>>>>>> f121d59daa0b2a045ca087394112cb87434dee0a
 
               function updateMap(year) {
                 var updateSubtitle = false;
