@@ -5,6 +5,7 @@
     <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One" rel="stylesheet">
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="//d3js.org/topojson.v1.min.js"></script>
+    s
   </head>
 
   <body>
@@ -178,9 +179,11 @@
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
               var height = 600;
+
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
+              var widthPadding = document.getElementsByTagName("div")[0].offsetLeft;
 
               svg.append("text")
                 .attr("id", "choro_title")
@@ -349,15 +352,19 @@
                 .on("click", function(){
                   //When the slider is clicked the handler moves and updates the slider
                   var slider = svg.select("#assetsHandle");
-                   var newYear = parseInt(yearScale(d3.event.x))-17;
-                   //console.log(newYear);
+                  var xClick = d3.event.x - widthPadding;
+                   var newYear = parseInt(yearScale(xClick));
+                   console.log(newYear);
                    //console.log(d3.event.x);
-                 slider.attr("x", yearScale.invert(newYear));
+                
                  if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
                               //assetsHandle.attr("x", d3.event.x-4);
+                               slider.attr("x", yearScale.invert(newYear));
                               currentYear = newYear;
                               updateMap(newYear);
                             }
+
+
                 })
               assetsSlider.append("path")
                 .datum(timeData)
