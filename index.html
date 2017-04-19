@@ -124,6 +124,10 @@
           return ([min, max]);
         }
 
+        function formatPop(arrayPop, data){
+            arrayPop.push(data);
+        }
+
         function formatData(arrayBanks, data) {
           // Set up bank array
           var failDateRaw = data['Failure Date'].slice(0,data['Failure Date'].length-1);
@@ -169,9 +173,68 @@
         }
 
         var bankData = [];
+        var populationData =[];
+        var s01 = [];
+        var s02 = [];
+        var s03 = [];
+        var s04 = [];
+        var s05 = [];
+        var s06 = [];
+        var s07 = [];
+        var s08 = [];
+        var s09 = [];
+        var s10 = [];
+        var s11 = [];
+        var s12 = [];
+        var s13 = [];
+        var s14 = [];
+        var s15 = [];
+        var s16 = [];
+        var s17 = [];
+        var s18 = [];
+        var s19 = [];
+        var s20 = [];
+        var s21 = [];
+        var s22 = [];
+        var s23 = [];
+        var s24 = [];
+        var s25 = [];
+        var s26 = [];
+        var s27 = [];
+        var s28 = [];
+        var s29 = [];
+        var s30 = [];
+        var s31 = [];
+        var s32 = [];
+        var s33 = [];
+        var s34 = [];
+        var s35 = [];
+        var s36 = [];
+        var s37 = [];
+        var s38 = [];
+        var s39 = [];
+        var s40 = [];
+        var s41 = [];
+        var s42 = [];
+        var s43 = [];
+        var s44 = [];
+        var s45 = [];
+        var s46 = [];
+        var s47 = [];
+        var s48 = [];
+        var s49 = [];
+        var s50 = [];
+        var s51 = [];
+        var s52 = [];
+        var s53 = [];
+        var s54 = [];
+        var s55 = [];
+        var s56 = [];
+
         d3.queue()
           .defer(d3.csv, "data/banks.csv", function(data) { formatData(bankData, data); })
           .defer(function(callback) { d3.json("data/us.json", function(data) { callback(null, data); }) })
+          .defer(d3.csv, "data/population.csv", function(d){ formatPop(populationData, d); })
           .awaitAll(function(error, data) {
             if (error) { console.log("Error: "+error); }
             else {
@@ -242,6 +305,7 @@
               function showMap(year) {
                 var yearMinMax = yearAssets(timeData, year);
                 var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
+                var selectedState;
 
                 svg.append("g") // individual state fills
                   .attr("id", "stateMap")
@@ -259,8 +323,44 @@
                       }
                       return "#d9d9d9";
                     })
-                    .attr("d", path);
-              }
+                    .attr("d", path)
+                    .on('click', function(d){
+                        if (selectedState!= null){
+                            selectedState.style("stroke", "#D3D3D3")
+                                .style("stroke-width", "1px");
+                        }
+                        d3.select(this).style("stroke", "#A9A9A9")
+                            .style("stroke-width", "3px");
+                        selectedState = d3.select(this);
+                        zoomInfo(d);
+                    })}
+
+                  var popData = [];
+
+                  var id = svg2.append("text")
+                      .attr("x", 100)
+                      .attr("y", 100)
+                      .style("font-size", "20px")
+                      .text("Initial Population Value");
+
+                  var popIndexMap = d3.map(populationData, function(d){
+                      if (d.id > 9) {return d.id};
+                      return Number("0"+String(d.id));
+
+                  });
+
+                  function zoomInfo(d){
+                      popData = [];
+                      var state = popIndexMap.get(d.id);
+                      console.log(state);
+                      //grab the population data of the clicked state
+                      for(var i = 1930; i <= 2010; i= i + 10){
+                          year = String(i);
+                          popData.push(state[year]);
+                      }
+                      id.text(popData);
+                      //
+                  }
 
               function updateMap(year) {
                 var updateSubtitle = false;
