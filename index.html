@@ -5,7 +5,6 @@
     <link href="https://fonts.googleapis.com/css?family=Alfa+Slab+One" rel="stylesheet">
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script src="//d3js.org/topojson.v1.min.js"></script>
-    s
   </head>
 
   <body>
@@ -52,7 +51,7 @@
       </div>
 
       <div class='col2' style='width:60%;'>
-        <h2 style='color: #000; text-align: left; font-size: 22px' id='crisis_title'>Great Depression</h2>
+        <h2 style='color: #000; text-align: left; font-size: 22px; margin-bottom:5px' id='crisis_title'>Great Depression</h2>
         <div class='text_col'>
           <p id='crisis_text'>
             The Great Depression was the deepest and longest-lasting economic downturn
@@ -179,11 +178,9 @@
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
               var height = 600;
-
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
-              var widthPadding = document.getElementsByTagName("div")[0].offsetLeft;
 
               svg.append("text")
                 .attr("id", "choro_title")
@@ -202,6 +199,55 @@
                 .style("font-weight", 400)
                 .style("fill", d3.hsl(0, 1, .65))
                 .text("Great Depression");
+
+              // Legend setup
+                var defs = svg.append("defs");
+                defs.attr("id", "legendDefs")
+                var legendGradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+                legendGradient.setAttribute("id", "legend");
+                legendGradient.setAttribute("x1", "0%");
+                legendGradient.setAttribute("x2", "100%");
+                legendGradient.setAttribute("y1", "0%");
+                legendGradient.setAttribute("y2", "0%");
+                document.getElementById("legendDefs").appendChild(legendGradient);
+
+                var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop1.setAttribute("id", "stopGrey");
+                stop1.setAttribute("offset", "20%");
+                stop1.setAttribute("stop-color", "#cccccc");
+                legendGradient.appendChild(stop1);
+
+                var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+                stop2.setAttribute("id", "stopPink");
+                stop2.setAttribute("offset", "80%");
+                stop2.setAttribute("stop-color", "#ff9999");
+                legendGradient.appendChild(stop2);
+
+              svg.append("rect")
+                .attr("x", 0)
+                .attr("y", 35)
+                .attr("height", 6)
+                .attr("width", 265)
+                .attr("rx", 3)
+                .attr("ry", 3)
+                .attr("fill", "url(#legend)")
+
+              svg.append("text")
+                .attr("id", "legendMin")
+                .attr("x", 0)
+                .attr("y", 57)
+                .style("font-size", "12px")
+                .text("-$10000");
+
+              svg.append("text")
+                .attr("id", "legendMax")
+                .attr("x", 200)
+                .attr("y", 57)
+                .attr("text-anchor", "end")
+                .style("font-size", "12px")
+                .text("-$10000");
+
+              // End legend setup
 
               var svg2 = d3.select(viz).append("svg");
               svg2.attr("width","35%")
@@ -260,7 +306,14 @@
                       return "#d9d9d9";
                     })
                     .attr("d", path);
-              }
+
+                var yearMin = parseInt(yearMinMax[0]+"000");
+                var yearMax = parseInt(yearMinMax[1]+"000");
+                svg.select("#legendMin")
+                  .text("-$"+yearMin)
+                svg.select("#legendMax")
+                  .text("-$"+yearMax)
+            }
 
               function updateMap(year) {
                 var updateSubtitle = false;
@@ -303,6 +356,13 @@
                   svg2.select("#svg2_subtitle")
                     .text(biggestFail.name);
                 }
+
+                var yearMin = parseInt(yearMinMax[0]+"000");
+                var yearMax = parseInt(yearMinMax[1]+"000");
+                svg.select("#legendMin")
+                  .text("-$"+yearMin)
+                svg.select("#legendMax")
+                  .text("-$"+yearMax)
 
                 // Update subtitles
                 for (y in importantRanges) {
@@ -351,21 +411,26 @@
                 .attr("id", "sliderPath")
                 .on("click", function(){
                   //When the slider is clicked the handler moves and updates the slider
-                  var slider = svg.select("#assetsHandle");
-                  var xClick = d3.event.x - widthPadding;
-                   var newYear = parseInt(yearScale(xClick));
-                   console.log(newYear);
+                  var newYear = parseInt(yearScale(d3.event.x))-17;
+                   //console.log(newYear);
                    //console.log(d3.event.x);
-                
-                 if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
+                  assetsHandle.attr("x", yearScale.invert(newYear));
+                  if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
                               //assetsHandle.attr("x", d3.event.x-4);
-                               slider.attr("x", yearScale.invert(newYear));
                               currentYear = newYear;
                               updateMap(newYear);
                             }
-
-
                 })
+                .call(d3.drag()
+                        .on("start drag", function() {
+                            var newYear = parseInt(yearScale(d3.event.x));
+                            assetsHandle.attr("x", d3.event.x);
+
+                            if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
+                              currentYear = newYear;
+                              updateMap(newYear);
+                            }
+                        }));
               assetsSlider.append("path")
                 .datum(timeData)
                 .attr("fill", "#d9d9d9")
@@ -408,23 +473,13 @@
               }
 
               var assetsHandle = assetsSlider.insert("rect")
-                .attr("height", 25)
-                .attr("width",8)
-                .attr("x", 0)
-                .attr("y", 17)
+                .attr("height", 35)
+                .attr("width", 1)
+                .attr("x", 4)
+                .attr("y", 5)
                 .attr("rx",4)
                 .attr("fill", "#000")
                 .attr("id", "assetsHandle")
-                .call(d3.drag()
-                        .on("start drag", function() {
-                            var newYear = parseInt(yearScale(d3.event.x));
-
-                            if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
-                              assetsHandle.attr("x", d3.event.x-4);
-                              currentYear = newYear;
-                              updateMap(newYear);
-                            }
-                        }));
             }
           });
       </script>
