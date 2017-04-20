@@ -138,7 +138,7 @@
           return ([min, max]);
         }
         function totalPopulationMinMax(popArray){
-          console.log(popArray)
+         // console.log(popArray)
           var max = parseInt(popArray[0]['1930']);
           var min = parseInt(popArray[0]['1930']);
           for(a = 0; a < 52; a++){
@@ -620,6 +620,76 @@
                       averagePrivatization[num]/=51;
                   }
 
+                  //get the average Commercial Banks
+                   var averageCommercial = [];
+                  for(var num = 0; num < 90; num++){
+                      averageCommercial[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year]['COMMERCIAL BANK'])) {
+                              averageCommercial[year] += stateData[year]['COMMERCIAL BANK'];
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageCommercial[num]/=51;
+                  }
+
+                  //get the average Savings Assosiactions
+                   var averageSavingsAssoc = [];
+                  for(var num = 0; num < 90; num++){
+                      averageSavingsAssoc[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year]['SAVINGS ASSOCIATION'])) {
+                              averageSavingsAssoc[year] += stateData[year]['SAVINGS ASSOCIATION'];
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageSavingsAssoc[num]/=51;
+                  }
+
+                  //get the average Savings Banks
+                   var averageSavingsBanks = [];
+                  for(var num = 0; num < 90; num++){
+                      averageSavingsBanks[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year]['SAVINGS BANK'])) {
+                              averageSavingsBanks[year] += stateData[year]['SAVINGS BANK'];
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageSavingsBanks[num]/=51;
+                  }
+
+
                   //get an average of the populations for each year
                   var averagePopulation = [];
                   for(var y = 0; y <9; y++){
@@ -644,7 +714,7 @@
 
                   var populationExtentAvg = d3.extent(averagePopulation);
                   var populationExtent = totalPopulationMinMax(populationData);
-                  console.log(populationExtent);
+                  //console.log(populationExtent);
                   var assetExtent = d3.extent(averageAssets);
 
                   var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
@@ -982,7 +1052,50 @@
                   .attr("fill", "#a9a9a9")
                   .attr("id", "g4Handle")
 
+                  var commercialExtent = d3.extent(averageCommercial);
+                    var yScale2CommercialAvg = d3.scaleLinear().domain(commercialExtent).range([70,0]);
+                    var index = 0;
+                    var commercialLine = d3.area()
+                    .x(function(d) { index++; return xScale2(scaleAssetIndex(index-1)) })
+                    .y1(function(d) { return yScale2CommercialAvg(d) })
+                    .y0(70)
 
+                    svg2.append("path")
+                    .datum(averageCommercial)
+                    .attr("id", "commercialLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", commercialLine)
+                    .attr("transform", "translate(55, 490)");
+
+                    var savingsAssocExtent = d3.extent(averageSavingsAssoc);
+                    var yScale2SavingsAssocAvg = d3.scaleLinear().domain(savingsAssocExtent).range([70,0]);
+                    var index2 = 0;
+                    var savingsAssocLine = d3.area()
+                    .x(function(d) { index2++; return xScale2(scaleAssetIndex(index2-1)) })
+                    .y1(function(d) { return yScale2SavingsAssocAvg(d) })
+                    .y0(70)
+
+                    svg2.append("path")
+                    .datum(averageSavingsAssoc)
+                    .attr("id", "savingsAssocLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", savingsAssocLine)
+                    .attr("transform", "translate(55, 490)");
+
+                    var savingsBankExtent = d3.extent(averageSavingsBanks);
+                    var yScale2SavingsBankAvg = d3.scaleLinear().domain(savingsBankExtent).range([70,0]);
+                    var index3 = 0;
+                    var savingsBankLine = d3.area()
+                    .x(function(d) { index3++; return xScale2(scaleAssetIndex(index3-1)) })
+                    .y1(function(d) { return yScale2SavingsBankAvg(d) })
+                    .y0(70)
+
+                    svg2.append("path")
+                    .datum(averageSavingsBanks)
+                    .attr("id", "savingsBankLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", savingsBankLine)
+                    .attr("transform", "translate(55, 490)");
 
                   var title = svg2.append("text")
                       .attr("id", "svg2_title")
@@ -1015,7 +1128,7 @@
                   var stateArray = stat[stateid];
                   console.log(stateArray);
                   var popArray = popData;
-                  //console.log(stateArray);
+
                   //var popArrayExtent = populationMinMax(popArray);
                   //var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   //var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([70,0]);
@@ -1186,7 +1299,7 @@
                           }
                       }
                     var privatizationExtent = d3.extent(privatizationArray);
-                    console.log(privatizationExtent);
+                   // console.log(privatizationExtent);
                     var yScale2Privatization = d3.scaleLinear().domain(privatizationExtent).range([70,0]);
                     var scaleThisPrivatizationIndex = d3.scaleLinear().domain([0,privatizationArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
 
@@ -1205,6 +1318,94 @@
                     .attr("d", privatizationLine)
                     .duration(500);
 
+                    //Graph 4 Data////////////////
+
+                    //plot Commercial banks in that state
+                    var commercialBanks = []
+                    for(var num = 0; num < 90; num++){
+                      commercialBanks[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year]['COMMERCIAL BANK'])) {
+                              commercialBanks[year] += stateArray[year]['COMMERCIAL BANK'];
+                          }
+                      }
+
+                    var commercialExtent = d3.extent(commercialBanks);
+                    var yScale2Commercial = d3.scaleLinear().domain(commercialExtent).range([70,0]);
+                    var scaleThisCommercialIndex = d3.scaleLinear().domain([0,commercialBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                    var counter1 = 0;
+                    var commercialLine = d3.area()
+                    .x(function(d) { counter1++; return xScale2(scaleThisCommercialIndex(counter1-1)) })
+                    .y1(function(d) { return yScale2Commercial(d) })
+                    .y0(70)
+
+                      d3.select("path#commercialLine")
+                      .datum(commercialBanks)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff6666")
+                    .attr("transform", "translate(55, 490)")
+                    .transition()
+                    .attr("d", commercialLine)
+                    .duration(500);
+
+                    //graph Savings Association data
+                  var savingsAssocBanks = []
+                    for(var num = 0; num < 90; num++){
+                      savingsAssocBanks[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year]['SAVINGS ASSOCIATION'])) {
+                              savingsAssocBanks[year] += stateArray[year]['SAVINGS ASSOCIATION'];
+                          }
+                      }
+
+                    var savingsAssocExtent = d3.extent(savingsAssocBanks);
+                    var yScale2SavingsAssoc = d3.scaleLinear().domain(savingsAssocExtent).range([70,0]);
+                    var scaleThisSavingsAssocIndex = d3.scaleLinear().domain([0,savingsAssocBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                    var counter2 = 0;
+                    var savingsAssocLine = d3.area()
+                    .x(function(d) { counter2++; return xScale2(scaleThisSavingsAssocIndex(counter2-1)) })
+                    .y1(function(d) { return yScale2SavingsAssoc(d) })
+                    .y0(70)
+
+                      d3.select("path#savingsAssocLine")
+                      .datum(savingsAssocBanks)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff00ff")
+                    .attr("transform", "translate(55, 490)")
+                    .transition()
+                    .attr("d", savingsAssocLine)
+                    .duration(500);
+
+                    //graph Savings Banks data
+                  var savingsBanks = []
+                    for(var num = 0; num < 90; num++){
+                      savingsBanks[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year]['SAVINGS BANK'])) {
+                              savingsBanks[year] += stateArray[year]['SAVINGS BANK'];
+                          }
+                      }
+                      console.log(savingsBanks);
+                    var savingsBankExtent = d3.extent(savingsBanks);
+                    var yScale2SavingsBank = d3.scaleLinear().domain(savingsBankExtent).range([70,0]);
+                    var scaleThisSavingsBankIndex = d3.scaleLinear().domain([0,savingsBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                    var counter3 = 0;
+                    var savingsBankLine = d3.area()
+                    .x(function(d) { counter3++; return xScale2(scaleThisSavingsAssocIndex(counter3-1)) })
+                    .y1(function(d) { return yScale2SavingsBank(d) })
+                    .y0(70)
+
+                      d3.select("path#savingsBankLine")
+                      .datum(savingsBanks)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#f2c830")
+                    .attr("transform", "translate(55, 490)")
+                    .transition()
+                    .attr("d", savingsBankLine)
+                    .duration(500);
 
 
                 }
