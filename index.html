@@ -240,10 +240,11 @@
               // Set up document
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
-              var height = 600;
+           ;   var height = 600;
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
+              var paddingWidth = document.getElementsByTagName("div")[0].offsetLeft;
 
               svg.append("text")
                 .attr("id", "choro_title")
@@ -486,7 +487,7 @@
               showMap(currentYear);
 
               // Create slider
-              var yearScale = d3.scaleLinear().domain([0,width]).range([1934,2016]); // converts pixel-coordinates to years
+              var yearScale = d3.scaleLinear().domain([0,width-4]).range([1934,2016]); // converts pixel-coordinates to years
 
               var xScale = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([4,width-8]); // converts years to pixel coordinates
               var ticks = xScale.ticks(51);
@@ -515,9 +516,10 @@
                   var newYear = parseInt(yearScale(d3.event.x))-17;
                    //console.log(newYear);
                    //console.log(d3.event.x);
-                  assetsHandle.attr("x", yearScale.invert(newYear));
+                  
                   if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
                               //assetsHandle.attr("x", d3.event.x-4);
+                              assetsHandle.attr("x", yearScale.invert(newYear));
                               currentYear = newYear;
                               updateMap(newYear);
                             }
@@ -525,9 +527,10 @@
                 .call(d3.drag()
                         .on("start drag", function() {
                             var newYear = parseInt(yearScale(d3.event.x));
-                            assetsHandle.attr("x", d3.event.x);
+                            
 
                             if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
+                              assetsHandle.attr("x", d3.event.x);
                               currentYear = newYear;
                               updateMap(newYear);
                             }
