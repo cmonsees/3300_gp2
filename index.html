@@ -527,6 +527,8 @@
                       averageAcq[num]/=51;
                   }
 
+                  
+
                   //get the average Payouts
                   var averagePayout = [];
                   for(var num = 0; num < 90; num++){
@@ -547,7 +549,75 @@
                       }
                   }
                   for(var num = 0; num < 90; num++){
-                      averageAcq[num]/=51;
+                      averagePayout[num]/=51;
+                  }
+                  //get the average Transfers
+                  var averageTransfer = [];
+                  for(var num = 0; num < 90; num++){
+                      averageTransfer[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].TRANSFER)) {
+                              averageTransfer[year] += stateData[year].TRANSFER;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageTransfer[num]/=51;
+                  }
+
+                  //get the average Management
+                   var averageManagement = [];
+                  for(var num = 0; num < 90; num++){
+                      averageManagement[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].MANAGEMENT)) {
+                              averageManagement[year] += stateData[year].MANAGEMENT;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageManagement[num]/=51;
+                  }
+
+                  //get the average privatization
+                  var averagePrivatization = [];
+                  for(var num = 0; num < 90; num++){
+                      averagePrivatization[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].PRIVATIZATION)) {
+                              averagePrivatization[year] += stateData[year].PRIVATIZATION;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averagePrivatization[num]/=51;
                   }
 
                   //get an average of the populations for each year
@@ -706,6 +776,48 @@
                     .attr("id", "payoutLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", payoutLine)
+                    .attr("transform", "translate(40, 230)");
+
+                     var transferExtent = d3.extent(averageTransfer);
+                    var yScale2TransferAvg = d3.scaleLinear().domain(transferExtent).range([70,0]);
+                    var countie3 = 0;
+                    var transferLine = d3.area()
+                    .x(function(d) { countie3++; return xScale2(scaleAssetIndex(countie3-1)) })
+                    .y1(function(d) { return yScale2TransferAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averageTransfer)
+                    .attr("id", "transferLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", transferLine)
+                    .attr("transform", "translate(40, 230)");
+
+                    var managementExtent = d3.extent(averageManagement);
+                    var yScale2ManagementAvg = d3.scaleLinear().domain(managementExtent).range([70,0]);
+                    var countie4 = 0;
+                    var managementLine = d3.area()
+                    .x(function(d) { countie4++; return xScale2(scaleAssetIndex(countie4-1)) })
+                    .y1(function(d) { return yScale2ManagementAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averageManagement)
+                    .attr("id", "managementLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", managementLine)
+                    .attr("transform", "translate(40, 230)");
+
+                    var privateExtent = d3.extent(averagePrivatization);
+                    var yScale2PrivatizationAvg = d3.scaleLinear().domain(privateExtent).range([70,0]);
+                    var countie5 = 0;
+                    var privatizationLine = d3.area()
+                    .x(function(d) { countie5++; return xScale2(scaleAssetIndex(countie5-1)) })
+                    .y1(function(d) { return yScale2PrivatizationAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averagePrivatization)
+                    .attr("id", "privatizationLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", privatizationLine)
                     .attr("transform", "translate(40, 230)");
 
                      
@@ -922,9 +1034,9 @@
                     var payoutExtent = d3.extent(payArray);
                     var yScale2Payout = d3.scaleLinear().domain(payoutExtent).range([70,0]);
                     var scaleThisPayoutIndex = d3.scaleLinear().domain([0,payArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                   var count = -1
+                   var count2 = -1
                     var payoutLine = d3.area()
-                    .x(function(d) { count++; return xScale2(scaleThisPayoutIndex(count-1)) })
+                    .x(function(d) { count2++; return xScale2(scaleThisPayoutIndex(count2-1)) })
                     .y1(function(d) { return yScale2Payout(d) })
                     .y0(70)
                     
@@ -936,6 +1048,95 @@
                     .transition()
                     .attr("d", payoutLine)
                     .duration(500);
+
+                    //plot transfers
+                    var transferArray = []
+                for(var num = 0; num < 90; num++){
+                      transferArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].TRANSFER)) {
+                              transferArray[year] += stateArray[year].TRANSFER;
+                          }
+                      }
+                    var transferExtent = d3.extent(transferArray);
+                    var yScale2Transfer = d3.scaleLinear().domain(transferExtent).range([70,0]);
+                    var scaleThisTransferIndex = d3.scaleLinear().domain([0,transferArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                   var count3 = -1
+                    var transferLine = d3.area()
+                    .x(function(d) { count3++; return xScale2(scaleThisTransferIndex(count3-1)) })
+                    .y1(function(d) { return yScale2Transfer(d) })
+                    .y0(70)
+                    
+                    d3.select("path#transferLine")
+                    .datum(transferArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#8f00ff")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", transferLine)
+                    .duration(500);
+
+                    //plot Management
+                    var managementArray = []
+                for(var num = 0; num < 90; num++){
+                      managementArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].MANAGEMENT)) {
+                              managementArray[year] += stateArray[year].MANAGEMENT;
+                          }
+                      }
+                    var managementExtent = d3.extent(managementArray);
+                    var yScale2Management = d3.scaleLinear().domain(managementExtent).range([70,0]);
+                    var scaleThisManagementIndex = d3.scaleLinear().domain([0,managementArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+
+                   var count4 = -1
+                    var managementLine = d3.area()
+                    .x(function(d) { count4++; return xScale2(scaleThisManagementIndex(count4-1)) })
+                    .y1(function(d) { return yScale2Management(d) })
+                    .y0(70)
+                    //console.log(managementArray);
+                    d3.select("path#managementLine")
+                    .datum(managementArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff00ff")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", managementLine)
+                    .duration(500);
+
+                    //plot Privatization 
+                var privatizationArray = []
+                for(var num = 0; num < 90; num++){
+                      privatizationArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].PRIVATIZATION)) {
+                              privatizationArray[year] += stateArray[year].PRIVATIZATION;
+                          }
+                      }
+                    var privatizationExtent = d3.extent(privatizationArray);
+                    console.log(privatizationExtent);
+                    var yScale2Privatization = d3.scaleLinear().domain(privatizationExtent).range([70,0]);
+                    var scaleThisPrivatizationIndex = d3.scaleLinear().domain([0,privatizationArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+
+                   var count5 = -1
+                    var privatizationLine = d3.area()
+                    .x(function(d) { count5++; return xScale2(scaleThisPrivatizationIndex(count5-1)) })
+                    .y1(function(d) { return yScale2Privatization(d) })
+                    .y0(70)
+                    //console.log(privatizationArray);
+                    d3.select("path#privatizationLine")
+                    .datum(privatizationArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff6666")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", privatizationLine)
+                    .duration(500);
+
+
 
                 }
 
