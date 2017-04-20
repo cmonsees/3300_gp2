@@ -602,6 +602,29 @@
                       averageManagement[num]/=51;
                   }
 
+                  //get the average privatization
+                  var averagePrivatization = [];
+                  for(var num = 0; num < 90; num++){
+                      averagePrivatization[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].PRIVATIZATION)) {
+                              averagePrivatization[year] += stateData[year].PRIVATIZATION;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averagePrivatization[num]/=51;
+                  }
+
                   //get an average of the populations for each year
                   var averagePopulation = [];
                   for(var y = 0; y <9; y++){
@@ -763,13 +786,27 @@
                     var countie4 = 0;
                     var managementLine = d3.area()
                     .x(function(d) { countie4++; return xScale2(scaleAssetIndex(countie4-1)) })
-                    .y1(function(d) { return yScale2TransferAvg(d) })
+                    .y1(function(d) { return yScale2ManagementAvg(d) })
                     .y0(70)
                     svg2.append("path")
                     .datum(averageManagement)
                     .attr("id", "managementLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", managementLine)
+                    .attr("transform", "translate(40, 230)");
+
+                    var privateExtent = d3.extent(averagePrivatization);
+                    var yScale2PrivatizationAvg = d3.scaleLinear().domain(privateExtent).range([70,0]);
+                    var countie5 = 0;
+                    var privatizationLine = d3.area()
+                    .x(function(d) { countie5++; return xScale2(scaleAssetIndex(countie5-1)) })
+                    .y1(function(d) { return yScale2PrivatizationAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averagePrivatization)
+                    .attr("id", "privatizationLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", privatizationLine)
                     .attr("transform", "translate(40, 230)");
 
                      
@@ -1026,6 +1063,38 @@
                     .transition()
                     .attr("d", managementLine)
                     .duration(500);
+
+                    //plot Privatization 
+                var privatizationArray = []
+                for(var num = 0; num < 90; num++){
+                      privatizationArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].PRIVATIZATION)) {
+                              privatizationArray[year] += stateArray[year].PRIVATIZATION;
+                          }
+                      }
+                    var privatizationExtent = d3.extent(privatizationArray);
+                    console.log(privatizationExtent);
+                    var yScale2Privatization = d3.scaleLinear().domain(privatizationExtent).range([70,0]);
+                    var scaleThisPrivatizationIndex = d3.scaleLinear().domain([0,privatizationArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+
+                   var count5 = -1
+                    var privatizationLine = d3.area()
+                    .x(function(d) { count5++; return xScale2(scaleThisPrivatizationIndex(count5-1)) })
+                    .y1(function(d) { return yScale2Privatization(d) })
+                    .y0(70)
+                    //console.log(privatizationArray);
+                    d3.select("path#privatizationLine")
+                    .datum(privatizationArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff6666")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", privatizationLine)
+                    .duration(500);
+
+
 
                 }
 
