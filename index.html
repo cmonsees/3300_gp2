@@ -532,7 +532,7 @@
                       averageAcq[num]/=51;
                   }
 
-                  
+
 
                   //get the average Payouts
                   var averagePayout = [];
@@ -681,6 +681,30 @@
                     .attr("rx",4)
                     .attr("fill", "#a9a9a9")
                     .attr("id", "g1Handle")
+                  svg2.append("rect")
+                    .attr("x", 55)
+                    .attr("y", 205)
+                    .attr("height", 2)
+                    .attr("width", 15)
+                    .attr("fill", "#ff9999")
+                  svg2.append("text")
+                    .attr("x", 75)
+                    .attr("y", 210)
+                    .attr("fill", "#ccc")
+                    .style("font-size", 12)
+                    .text("State Data")
+                  svg2.append("rect")
+                    .attr("x", 150)
+                    .attr("y", 205)
+                    .attr("height", 2)
+                    .attr("width", 15)
+                    .attr("fill", "#ccc")
+                  svg2.append("text")
+                    .attr("x", 170)
+                    .attr("y", 210)
+                    .attr("fill", "#ccc")
+                    .style("font-size", 12)
+                    .text("Average")
 
                   // Graph 2
                   var acquisitionExtent = d3.extent(averageAcq);
@@ -771,9 +795,54 @@
                     .attr("fill-opacity", ".01")
                     .attr("d", managementLine)
                     .attr("transform", "translate(40, 230)");
-
-                     
-
+                    svg2.append("rect")
+                      .attr("x", 55)
+                      .attr("y", 335)
+                      .attr("height", 2)
+                      .attr("width", 15)
+                      .attr("fill", "#f2c830")
+                    svg2.append("text")
+                      .attr("x", 75)
+                      .attr("y", 340)
+                      .attr("fill", "#ccc")
+                      .style("font-size", 12)
+                      .text("Acquisitions")
+                    svg2.append("rect")
+                      .attr("x", 160)
+                      .attr("y", 335)
+                      .attr("height", 2)
+                      .attr("width", 15)
+                      .attr("fill", "#ff7f00")
+                    svg2.append("text")
+                      .attr("x", 180)
+                      .attr("y", 340)
+                      .attr("fill", "#ccc")
+                      .style("font-size", 12)
+                      .text("Payouts")
+                    svg2.append("rect")
+                      .attr("x", 245)
+                      .attr("y", 335)
+                      .attr("height", 2)
+                      .attr("width", 15)
+                      .attr("fill", "#8f00ff")
+                    svg2.append("text")
+                      .attr("x", 265)
+                      .attr("y", 340)
+                      .attr("fill", "#ccc")
+                      .style("font-size", 12)
+                      .text("Transfer")
+                    svg2.append("rect")
+                      .attr("x", 330)
+                      .attr("y", 335)
+                      .attr("height", 2)
+                      .attr("width", 15)
+                      .attr("fill", "#ff00ff")
+                    svg2.append("text")
+                      .attr("x", 350)
+                      .attr("y", 340)
+                      .attr("fill", "#ccc")
+                      .style("font-size", 12)
+                      .text("Management")
 
                 // Graph 3
                 svg2.append("g")
@@ -822,6 +891,30 @@
                   .attr("rx",4)
                   .attr("fill", "#a9a9a9")
                   .attr("id", "g3Handle")
+                svg2.append("rect")
+                  .attr("x", 55)
+                  .attr("y", 465)
+                  .attr("height", 2)
+                  .attr("width", 15)
+                  .attr("fill", "#ff9999")
+                svg2.append("text")
+                  .attr("x", 75)
+                  .attr("y", 470)
+                  .attr("fill", "#ccc")
+                  .style("font-size", 12)
+                  .text("State Data")
+                svg2.append("rect")
+                  .attr("x", 150)
+                  .attr("y", 465)
+                  .attr("height", 2)
+                  .attr("width", 15)
+                  .attr("fill", "#ccc")
+                svg2.append("text")
+                  .attr("x", 170)
+                  .attr("y", 470)
+                  .attr("fill", "#ccc")
+                  .style("font-size", 12)
+                  .text("Average")
 
                 // Graph 4
                 svg2.append("g")
@@ -933,11 +1026,11 @@
                     .x(function(d) { count++; return xScale2(scaleThisAcquisitionIndex(count-1)) })
                     .y1(function(d) { return yScale2Acq(d) })
                     .y0(70)
-                    
+
                     d3.select("path#acquisitionLine")
                     .datum(acqArray)
                     .attr("fill-opacity", ".01")
-                    .attr("stroke", "#ff9999")
+                    .attr("stroke", "#f2c830")
                     .attr("transform", "translate(40, 230)")
                     .transition()
                     .attr("d", acquisitionLine)
@@ -960,7 +1053,7 @@
                     .x(function(d) { count2++; return xScale2(scaleThisPayoutIndex(count2-1)) })
                     .y1(function(d) { return yScale2Payout(d) })
                     .y0(70)
-                    
+
                     d3.select("path#payoutLine")
                     .datum(payArray)
                     .attr("fill-opacity", ".01")
@@ -988,7 +1081,7 @@
                     .x(function(d) { count3++; return xScale2(scaleThisTransferIndex(count3-1)) })
                     .y1(function(d) { return yScale2Transfer(d) })
                     .y0(70)
-                    
+
                     d3.select("path#transferLine")
                     .datum(transferArray)
                     .attr("fill-opacity", ".01")
