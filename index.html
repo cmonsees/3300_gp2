@@ -138,7 +138,7 @@
           return ([min, max]);
         }
 
-        
+
 
         function formatData(arrayBanks, data) {
           // Set up bank array
@@ -526,17 +526,15 @@
                     .datum(averageAssets)
                     .attr("fill", "#d9d9d9")
                     .attr("d", areaAverageAsset)
-                    .attr("opacity", ".4")
-                    .attr("stroke", "black")
+                    .attr("opacity", "1")
                     .attr("transform", "translate(19, 100)");
 
                     svg2.append("path")
                     .datum(averageAssets)
                     .attr("id", "assetLine")
-                    .attr("fill", "#ff00ff")
+                    .attr("fill", "#ff9999")
                     .attr("d", areaAverageAsset)
-                    .attr("opacity", ".01")
-                    .attr("stroke", "black")
+                    .attr("opacity", "0")
                     .attr("transform", "translate(19, 100)");
 
                   // Graph 2
@@ -550,11 +548,6 @@
                     .attr("id", "yAxis2")
                     .call(d3.axisLeft(yScale2Average)
                         .tickFormat(d3.format(".2s")));
-
-               //   var area = d3.area()
-               // .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
-               // .y1(function(d) { return yScale(d.totalDeposits) })
-                //.y0(39)
 
                 // Graph 3
                 svg2.append("g")
@@ -573,18 +566,17 @@
                   .y0(70)
                 svg2.append("path")
                   .datum(averagePopulation)
-                  .attr("fill", "#00ffff")
-                  .attr("opacity", ".4")
+                  .attr("fill", "#d9d9d9")
+                  .attr("opacity", "1")
                   .attr("d", areaAveragePop)
                   .attr("transform", "translate(19, 360)");
 
                   svg2.append("path")
                     .datum(averagePopulation)
                     .attr("id", "populationLine")
-                    .attr("fill", "#ff0000")
+                    .attr("fill", "#ff9999")
                     .attr("opacity", ".01")
                     .attr("d", areaAveragePop)
-                    .attr("stroke", "black")
                     .attr("transform", "translate(19, 360)")
                     .transition()
                     .duration(500);
@@ -628,10 +620,8 @@
                     .y0(70)
                     d3.select("path#populationLine")
                     .datum(popArray)
-                    .attr("fill", "#ff0000")
                     .attr("opacity", ".4")
                     .attr("d", areaThisPopulation)
-                    .attr("stroke", "black")
                     .attr("transform", "translate(19, 360)");
                     //AssetGraph
                 var assetArray = []
@@ -643,7 +633,7 @@
                               assetArray[year] += stateArray[year].numAssets;
                           }
                       }
-                var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);  
+                var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                 var assetArrayExtent = d3.extent(assetArray);
                 var yScaleAsset = d3.scaleLinear().domain(assetArrayExtent).range([70,0]);
                 var counter =-1;
@@ -654,10 +644,9 @@
 
                 d3.select("path#assetLine")
                    .datum(assetArray)
-                   .attr("fill", "#ff00ff")
-                   .attr("opacity", ".4")
+                   .attr("fill", "#ff9999")
+                   .attr("opacity", ".5")
                    .attr("d", areaThisStateAsset)
-                   .attr("stroke", "black")
                    .attr("transform", "translate(19, 100)");
                 }
 
