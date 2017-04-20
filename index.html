@@ -287,7 +287,7 @@
             for (var y = 0; y < 90; y++){
                 stat[s][y] = {
                     numAssets: 0,
-                    MERGER: 0,
+                    MANAGEMENT: 0,
                     ACQUISITION: 0,
                     PAYOUT: 0,
                     PRIVATIZATION: 0,
@@ -579,6 +579,29 @@
                       averageTransfer[num]/=51;
                   }
 
+                  //get the average Management
+                   var averageManagement = [];
+                  for(var num = 0; num < 90; num++){
+                      averageManagement[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].MANAGEMENT)) {
+                              averageManagement[year] += stateData[year].MANAGEMENT;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageManagement[num]/=51;
+                  }
+
                   //get an average of the populations for each year
                   var averagePopulation = [];
                   for(var y = 0; y <9; y++){
@@ -733,6 +756,20 @@
                     .attr("id", "transferLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", transferLine)
+                    .attr("transform", "translate(40, 230)");
+
+                    var managementExtent = d3.extent(averageManagement);
+                    var yScale2ManagementAvg = d3.scaleLinear().domain(managementExtent).range([70,0]);
+                    var countie4 = 0;
+                    var managementLine = d3.area()
+                    .x(function(d) { countie4++; return xScale2(scaleAssetIndex(countie4-1)) })
+                    .y1(function(d) { return yScale2TransferAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averageManagement)
+                    .attr("id", "managementLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", managementLine)
                     .attr("transform", "translate(40, 230)");
 
                      
@@ -959,6 +996,35 @@
                     .attr("transform", "translate(40, 230)")
                     .transition()
                     .attr("d", transferLine)
+                    .duration(500);
+
+                    //plot Management
+                    var managementArray = []
+                for(var num = 0; num < 90; num++){
+                      managementArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].MANAGEMENT)) {
+                              managementArray[year] += stateArray[year].MANAGEMENT;
+                          }
+                      }
+                    var managementExtent = d3.extent(managementArray);
+                    var yScale2Management = d3.scaleLinear().domain(managementExtent).range([70,0]);
+                    var scaleThisManagementIndex = d3.scaleLinear().domain([0,managementArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+
+                   var count4 = -1
+                    var managementLine = d3.area()
+                    .x(function(d) { count4++; return xScale2(scaleThisManagementIndex(count4-1)) })
+                    .y1(function(d) { return yScale2Management(d) })
+                    .y0(70)
+                    //console.log(managementArray);
+                    d3.select("path#managementLine")
+                    .datum(managementArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff00ff")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", managementLine)
                     .duration(500);
 
                 }
