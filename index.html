@@ -142,7 +142,7 @@
           var max = parseInt(popArray[0]['1930']);
           var min = parseInt(popArray[0]['1930']);
           for(a = 0; a < 52; a++){
-                     
+
                       if( parseInt(popArray[a]['1930']) > max){max = popArray[a]['1930']; }
                        if(parseInt(popArray[a]['1940']) > max){max = popArray[a]['1940']; }
                       if(parseInt(popArray[a]['1950'])> max){max = popArray[a]['1950']; }
@@ -168,7 +168,7 @@
                           if(parseInt(popArray[a]['2010']) < min){min = popArray[a]['2010']; }
                       };
                   }
-         
+
           return ([min, max]);
         }
 
@@ -570,7 +570,7 @@
                     .attr("fill", "#ff9999")
                     .attr("d", areaAverageAsset)
                     .attr("opacity", "0")
-                    .attr("transform", "translate(19, 100)");
+                    .attr("transform", "translate(19, 100)")
                   var g1Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
@@ -615,23 +615,20 @@
                   .x(function(d) { return xScale2(scalePopulationIndex(averagePopulation.indexOf(d))) })
                   .y1(function(d) { return yScale2Pop(d) })
                   .y0(70)
-                svg2.append("path")
+                svg2.append("path") // average population line
                   .datum(averagePopulation)
+                  .attr("id", "populationLine_avg")
                   .attr("fill", "#d9d9d9")
-                  .attr("opacity", ".6")
                   .attr("opacity", "1")
                   .attr("d", areaAveragePop)
-                  .attr("stroke", "black")
-                  .attr("transform", "translate(19, 360)");
-                svg2.append("path")
+                  .attr("transform", "translate(19, 360)")
+                svg2.append("path") // state population
                   .datum(averagePopulation)
                   .attr("id", "populationLine")
                   .attr("fill", "#ff9999")
                   .attr("opacity", ".01")
                   .attr("d", areaAveragePop)
                   .attr("transform", "translate(19, 360)")
-                  .transition()
-                    .duration(500);
                 var g3Handle = svg2.insert("rect")
                   .attr("height", 70)
                   .attr("width", 1)
@@ -686,11 +683,13 @@
                     .x(function(d) { return xScale2(scalePopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
                     .y0(70)
-                    d3.select("path#populationLine")
-                    .datum(popArray)
-                    .attr("opacity", ".4")
+                  d3.select("path#populationLine")
+                  .datum(popArray)
+                  .attr("opacity", ".5")
+                  .attr("transform", "translate(19, 360)")
+                  .transition()
                     .attr("d", areaThisPopulation)
-                    .attr("transform", "translate(19, 360)");
+                    .duration(500);
                     //AssetGraph
                 var assetArray = []
                 for(var num = 0; num < 90; num++){
@@ -711,11 +710,13 @@
                     .y0(70)
 
                 d3.select("path#assetLine")
-                   .datum(assetArray)
-                   .attr("fill", "#ff9999")
-                   .attr("opacity", ".5")
-                   .attr("d", areaThisStateAsset)
-                   .attr("transform", "translate(19, 100)");
+                  .datum(assetArray)
+                  .attr("fill", "#ff9999")
+                  .attr("opacity", ".5")
+                  .attr("transform", "translate(19, 100)")
+                  .transition()
+                    .attr("d", areaThisStateAsset)
+                    .duration(500);
                 }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
