@@ -137,6 +137,40 @@
           }
           return ([min, max]);
         }
+        function totalPopulationMinMax(popArray){
+          console.log(popArray)
+          var max = parseInt(popArray[0]['1930']);
+          var min = parseInt(popArray[0]['1930']);
+          for(a = 0; a < 52; a++){
+                     
+                      if( parseInt(popArray[a]['1930']) > max){max = popArray[a]['1930']; }
+                       if(parseInt(popArray[a]['1940']) > max){max = popArray[a]['1940']; }
+                      if(parseInt(popArray[a]['1950'])> max){max = popArray[a]['1950']; }
+                       if(parseInt(popArray[a]['1960'])> max){max = popArray[a]['1960']; }
+                       if(parseInt(popArray[a]['1970'])> max){max = popArray[a]['1970']; }
+                       if(parseInt(popArray[a]['1980'])> max){max = popArray[a]['1980']; }
+                       if(parseInt(popArray[a]['1990'])> max){max = popArray[a]['1990']; }
+                      if(parseInt(popArray[a]['2000'])> max){max = popArray[a]['2000']; }
+
+                      if(a<51) {
+                          if(parseInt(popArray[a]['2010'])> max){max = popArray[a]['2010']; }
+                      };
+                      if( parseInt(popArray[a]['1930']) < min){min = popArray[a]['1930']; }
+                       if(parseInt(popArray[a]['1940']) < min){min = popArray[a]['1940']; }
+                      if(parseInt(popArray[a]['1950']) < min){min = popArray[a]['1950']; }
+                       if(parseInt(popArray[a]['1960']) < min){min = popArray[a]['1960']; }
+                       if(parseInt(popArray[a]['1970']) < min){min = popArray[a]['1970']; }
+                       if(parseInt(popArray[a]['1980']) < min){min = popArray[a]['1980']; }
+                       if(parseInt(popArray[a]['1990']) < min){min = popArray[a]['1990']; }
+                      if(parseInt(popArray[a]['2000']) < min){min = popArray[a]['2000']; }
+
+                      if(a<51) {
+                          if(parseInt(popArray[a]['2010']) < min){min = popArray[a]['2010']; }
+                      };
+                  }
+         
+          return ([min, max]);
+        }
 
         
 
@@ -496,7 +530,9 @@
                       };
                   }
 
-                  var populationExtent = d3.extent(averagePopulation);
+                  var populationExtentAvg = d3.extent(averagePopulation);
+                  var populationExtent = totalPopulationMinMax(populationData);
+                  console.log(populationExtent);
                   var assetExtent = d3.extent(averageAssets);
 
                   var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
@@ -504,9 +540,9 @@
                   var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
                   var scalePopulationIndex = d3.scaleLinear().domain([0,averagePopulation.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   var scaleAssetIndex = d3.scaleLinear().domain([0,averageAssets.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                  var yScale2AveragePop = d3.scaleLinear().domain(populationExtent).range([100,0]);
+                  var yScale2Pop = d3.scaleLinear().domain(populationExtent).range([70,0]);
 
-                  // Graph 1
+                  // Graph 1 Assets
                   svg2.append("g")
                     .attr("class", "axisPop")
                     .attr("transform", "translate(18, 170)")
@@ -544,7 +580,7 @@
                     .attr("class", "axisPop")
                     .attr("transform", "translate(18, 300)")
                     .call(d3.axisBottom(xScale2))
-                  var yScale2Average = d3.scaleLinear().domain(populationExtent).range([70,0]);
+                  var yScale2Average = d3.scaleLinear().domain(populationExtentAvg).range([70,0]);
                   svg2.append("g")
                     .attr("transform", "translate(40, 230)")
                     .attr("id", "yAxis2")
@@ -565,17 +601,18 @@
                 svg2.append("g")
                   .attr("transform", "translate(40, 360)")
                   .attr("id", "yAxis3")
-                  .call(d3.axisLeft(yScale2AveragePop)
+                  .call(d3.axisLeft(yScale2Pop)
                     .tickFormat(d3.format(".2s")));
                 var areaAveragePop = d3.area()
                   .x(function(d) { return xScale2(scalePopulationIndex(averagePopulation.indexOf(d))) })
-                  .y1(function(d) { return yScale2AveragePop(d) })
+                  .y1(function(d) { return yScale2Pop(d) })
                   .y0(70)
                 svg2.append("path")
                   .datum(averagePopulation)
-                  .attr("fill", "#00ffff")
-                  .attr("opacity", ".4")
+                  .attr("fill", "#d9d9d9")
+                  .attr("opacity", ".6")
                   .attr("d", areaAveragePop)
+                  .attr("stroke", "black")
                   .attr("transform", "translate(19, 360)");
 
                   svg2.append("path")
@@ -616,12 +653,12 @@
                   //Population Graph
                   var stateArray = stat[stateid];
                   var popArray = popData;
-                  var popArrayExtent = populationMinMax(popArray);
+                  //var popArrayExtent = populationMinMax(popArray);
                   //var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                  var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([70,0]);
+                  //var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([70,0]);
 
-                 console.log(popArrayExtent);
-                  console.log(popArray)
+                 //console.log(popArrayExtent);
+                  //console.log(popArray)
                   var areaThisPopulation = d3.area()
                     .x(function(d) { return xScale2(scalePopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
