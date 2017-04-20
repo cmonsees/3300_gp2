@@ -172,7 +172,7 @@
           return ([min, max]);
         }
 
-        
+
 
         function formatData(arrayBanks, data) {
           // Set up bank array
@@ -558,22 +558,27 @@
                     .x(function(d) { return xScale2(scaleAssetIndex(averageAssets.indexOf(d))) })
                     .y1(function(d) { return yScale3(d) })
                     .y0(70)
-                  svg2.append("path")
+                  svg2.append("path") // Average line
                     .datum(averageAssets)
                     .attr("fill", "#d9d9d9")
                     .attr("d", areaAverageAsset)
-                    .attr("opacity", ".4")
-                    .attr("stroke", "black")
+                    .attr("opacity", "1")
                     .attr("transform", "translate(19, 100)");
-
-                    svg2.append("path")
+                  svg2.append("path") // State-specific line
                     .datum(averageAssets)
                     .attr("id", "assetLine")
-                    .attr("fill", "#ff00ff")
+                    .attr("fill", "#ff9999")
                     .attr("d", areaAverageAsset)
-                    .attr("opacity", ".01")
-                    .attr("stroke", "black")
+                    .attr("opacity", "0")
                     .attr("transform", "translate(19, 100)");
+                  var g1Handle = svg2.insert("rect")
+                    .attr("height", 70)
+                    .attr("width", 1)
+                    .attr("x", 40)
+                    .attr("y", 100)
+                    .attr("rx",4)
+                    .attr("fill", "#000")
+                    .attr("id", "g1Handle")
 
                   // Graph 2
                   svg2.append("g")
@@ -586,11 +591,14 @@
                     .attr("id", "yAxis2")
                     .call(d3.axisLeft(yScale2Average)
                         .tickFormat(d3.format(".2s")));
-
-               //   var area = d3.area()
-               // .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
-               // .y1(function(d) { return yScale(d.totalDeposits) })
-                //.y0(39)
+                  var g2Handle = svg2.insert("rect")
+                    .attr("height", 70)
+                    .attr("width", 1)
+                    .attr("x", 40)
+                    .attr("y", 230)
+                    .attr("rx",4)
+                    .attr("fill", "#000")
+                    .attr("id", "g2Handle")
 
                 // Graph 3
                 svg2.append("g")
@@ -611,20 +619,27 @@
                   .datum(averagePopulation)
                   .attr("fill", "#d9d9d9")
                   .attr("opacity", ".6")
+                  .attr("opacity", "1")
                   .attr("d", areaAveragePop)
                   .attr("stroke", "black")
                   .attr("transform", "translate(19, 360)");
-
-                  svg2.append("path")
-                    .datum(averagePopulation)
-                    .attr("id", "populationLine")
-                    .attr("fill", "#ff0000")
-                    .attr("opacity", ".01")
-                    .attr("d", areaAveragePop)
-                    .attr("stroke", "black")
-                    .attr("transform", "translate(19, 360)")
-                    .transition()
+                svg2.append("path")
+                  .datum(averagePopulation)
+                  .attr("id", "populationLine")
+                  .attr("fill", "#ff9999")
+                  .attr("opacity", ".01")
+                  .attr("d", areaAveragePop)
+                  .attr("transform", "translate(19, 360)")
+                  .transition()
                     .duration(500);
+                var g3Handle = svg2.insert("rect")
+                  .attr("height", 70)
+                  .attr("width", 1)
+                  .attr("x", 40)
+                  .attr("y", 360)
+                  .attr("rx",4)
+                  .attr("fill", "#000")
+                  .attr("id", "g3Handle")
 
                 // Graph 4
                 svg2.append("g")
@@ -638,6 +653,14 @@
                     .attr("transform", "translate(40, 490)")
                     .call(d3.axisLeft(yScale3)
                         .tickFormat(d3.format(".2s")));
+                var g4Handle = svg2.insert("rect")
+                  .attr("height", 70)
+                  .attr("width", 1)
+                  .attr("x", 40)
+                  .attr("y", 490)
+                  .attr("rx",4)
+                  .attr("fill", "#000")
+                  .attr("id", "g4Handle")
 
                 function zoomInfo(d){
                   popData = [];
@@ -665,10 +688,8 @@
                     .y0(70)
                     d3.select("path#populationLine")
                     .datum(popArray)
-                    .attr("fill", "#ff0000")
                     .attr("opacity", ".4")
                     .attr("d", areaThisPopulation)
-                    .attr("stroke", "black")
                     .attr("transform", "translate(19, 360)");
                     //AssetGraph
                 var assetArray = []
@@ -680,7 +701,7 @@
                               assetArray[year] += stateArray[year].numAssets;
                           }
                       }
-                var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);  
+                var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                 var assetArrayExtent = d3.extent(assetArray);
                 var yScaleAsset = d3.scaleLinear().domain(assetArrayExtent).range([70,0]);
                 var counter =-1;
@@ -691,10 +712,9 @@
 
                 d3.select("path#assetLine")
                    .datum(assetArray)
-                   .attr("fill", "#ff00ff")
-                   .attr("opacity", ".4")
+                   .attr("fill", "#ff9999")
+                   .attr("opacity", ".5")
                    .attr("d", areaThisStateAsset)
-                   .attr("stroke", "black")
                    .attr("transform", "translate(19, 100)");
                 }
 
@@ -777,6 +797,7 @@
 
               // Create slider
               var yearScale = d3.scaleLinear().domain([0,width-4]).range([1934,2016]); // converts pixel-coordinates to years
+              var yearScaleSvg2 = d3.scaleLinear().domain([40,svg2_width-4]).range([1934,2016]);
 
               var xScale = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([4,width-8]); // converts years to pixel coordinates
               var ticks = xScale.ticks(51);
@@ -806,6 +827,10 @@
                    //console.log(newYear);
                    //console.log(d3.event.x);
                   assetsHandle.attr("x", yearScale.invert(newYear));
+                  d3.select("#g1Handle").attr("x", yearScaleSvg2.invert(newYear));
+                  d3.select("#g2Handle").attr("x", yearScaleSvg2.invert(newYear));
+                  d3.select("#g3Handle").attr("x", yearScaleSvg2.invert(newYear));
+                  d3.select("#g4Handle").attr("x", yearScaleSvg2.invert(newYear));
 
                   if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
                               assetsHandle.attr("x", yearScale.invert(newYear));
@@ -818,6 +843,10 @@
                             var newYear = parseInt(yearScale(d3.event.x));
                             if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
                               assetsHandle.attr("x", d3.event.x);
+                              d3.select("#g1Handle").attr("x", yearScaleSvg2.invert(newYear));
+                              d3.select("#g2Handle").attr("x", yearScaleSvg2.invert(newYear));
+                              d3.select("#g3Handle").attr("x", yearScaleSvg2.invert(newYear));
+                              d3.select("#g4Handle").attr("x", yearScaleSvg2.invert(newYear));
                               currentYear = newYear;
                               updateMap(newYear);
                             }
