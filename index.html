@@ -532,6 +532,29 @@
                       averageAcq[num]/=51;
                   }
 
+                  //get the average Payouts
+                  var averagePayout = [];
+                  for(var num = 0; num < 90; num++){
+                      averagePayout[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].PAYOUT)) {
+                              averagePayout[year] += stateData[year].PAYOUT;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageAcq[num]/=51;
+                  }
+
                   //get an average of the populations for each year
                   var averagePopulation = [];
                   for(var y = 0; y <9; y++){
@@ -660,6 +683,20 @@
                     .attr("d", acquisitionLine)
                     .attr("transform", "translate(40, 230)");
 
+                    var payoutExtent = d3.extent(averagePayout);
+                    var yScale2PayoutAvg = d3.scaleLinear().domain(payoutExtent).range([70,0]);
+                    var countie2 = 0;
+                    var payoutLine = d3.area()
+                    .x(function(d) { countie2++; return xScale2(scaleAssetIndex(countie2-1)) })
+                    .y1(function(d) { return yScale2PayoutAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averagePayout)
+                    .attr("id", "payoutLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", payoutLine)
+                    .attr("transform", "translate(40, 230)");
+
                      
 
 
@@ -755,13 +792,12 @@
                   //Population Graph
                   var stateArray = stat[stateid];
                   var popArray = popData;
-                  console.log(stateArray);
+                  //console.log(stateArray);
                   //var popArrayExtent = populationMinMax(popArray);
                   //var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   //var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([70,0]);
 
                  //console.log(popArrayExtent);
-                  //console.log(popArray)
                   var areaThisPopulation = d3.area()
                     .x(function(d) { return xScale2(scalePopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
@@ -803,7 +839,7 @@
                     .duration(500);
 
 
-                    //graph2? Acquisitions 
+                    //graph2? Acquisitions vs payout vs transfers vs management vs privitazation
 
                      var acqArray = []
                 for(var num = 0; num < 90; num++){
@@ -830,6 +866,33 @@
                     .attr("transform", "translate(40, 230)")
                     .transition()
                     .attr("d", acquisitionLine)
+                    .duration(500);
+
+                    var payArray = []
+                for(var num = 0; num < 90; num++){
+                      payArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].PAYOUT)) {
+                              payArray[year] += stateArray[year].PAYOUT;
+                          }
+                      }
+                    var payoutExtent = d3.extent(payArray);
+                    var yScale2Payout = d3.scaleLinear().domain(payoutExtent).range([70,0]);
+                    var scaleThisPayoutIndex = d3.scaleLinear().domain([0,payArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                   var count = -1
+                    var payoutLine = d3.area()
+                    .x(function(d) { count++; return xScale2(scaleThisPayoutIndex(count-1)) })
+                    .y1(function(d) { return yScale2Payout(d) })
+                    .y0(70)
+                    
+                    d3.select("path#payoutLine")
+                    .datum(payArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff7f00")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", payoutLine)
                     .duration(500);
 
                 }
