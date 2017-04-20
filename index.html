@@ -415,9 +415,7 @@
                     })
                     .attr("d", path)
                     .on('click', function(d){
-                        if (selectedState != null){
-                            selectedState.style("stroke", "none")
-                        }
+                        if (selectedState != null) { selectedState.style("stroke", "none") }
                         d3.select(this.parentNode.appendChild(this)) // Makes state outlines more uniform
                           .style('stroke-opacity', 1)
                           .style('stroke', '#F00');
@@ -429,7 +427,7 @@
 
                   var popData = [];
 
-          
+
 
                   var popIndexMap = d3.map(populationData, function(d){
                       if (d.id > 9) {return d.id};
@@ -487,96 +485,65 @@
 
                   var populationExtent = d3.extent(averagePopulation);
                   var assetExtent = d3.extent(averageAssets);
-                  console.log(assetExtent);
-                   var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
+                  var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
 
-                  var svg2Padding = 10;
+                  var svg2Padding = 22;
 
                   var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
-                  var ticksX2 = xScale2.ticks(51);
-                  var tickFormatX2 = xScale2.tickFormat(51);
-                  ticksX2.map(tickFormatX2);
                   var xAxis2 = d3.axisBottom(xScale2);
-                      var plotXAxis2 = svg2.append("g")
+                  // Graph 1
+                  svg2.append("g")
                     .attr("class", "axisPop")
-                    .attr("transform", "translate(4,"+(height/2)+")")
+                    .attr("transform", "translate(18, 170)")
+                    .call(xAxis2);
+                  var yScale3 = d3.scaleLinear().domain(assetExtent).range([70,0]);
+                  svg2.append("g")
+                    .attr("transform", "translate(40, 100)")
+                    .attr("id", "yAxis3")
+                    .attr("class", "axisAssets")
+                    .call(d3.axisLeft(yScale3)
+                        .tickFormat(d3.format(".2s")));
+
+                  var line = d3.line()
+                    .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
+                    .y(function(d) { return yScale2(popData[d]) })
+
+                  // Graph 2
+                  svg2.append("g")
+                    .attr("class", "axisPop")
+                    .attr("transform", "translate(18, 300)")
+                    .call(d3.axisBottom(xScale2))
+                  var yScale2Average = d3.scaleLinear().domain(populationExtent).range([70,0]);
+                  svg2.append("g")
+                    .attr("transform", "translate(40, 230)")
+                    .attr("id", "yAxis2")
+                    .attr("class", "axisPop")
+                    .call(d3.axisLeft(yScale2Average)
+                      .tickFormat(d3.format(".2s")));
+
+                  var areaAveragePop = d3.area()
+                    .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
+                    .y1(function(d) { return yScale2(popData[d]) })
+                    .y0(99)
+
+                  // Graph 3
+                  var yScale4 = d3.scaleLog().domain(averageAssets[0], averageAssets[averageAssets.length-1]).range([70,0]);
+                  svg2.append("g")
+                    .attr("transform", "translate(40, 360)")
+                    .attr("id", "yAxis4")
+                    .attr("class", "axisAssets")
+                    .call(d3.axisLeft(yScale3)
+                        .tickFormat(d3.format(".2s")));
+                  svg2.append("g")
+                    .attr("class", "axisPop")
+                    .attr("transform", "translate(18, 430)")
                     .call(xAxis2);
 
-
-                var yScale2Average = d3.scaleLinear().domain(populationExtent).range([100,0]);
-                      
-                        var yAxis2 = d3.axisLeft(yScale2Average);
-                        var ticksY2 = yScale2Average.ticks(20);
-               var tickFormatY2 = yScale2Average.tickFormat(20);
-              ticksY2.map(tickFormatY2);
-                          var plotYAxis2 = svg2.append("g")
-                          .attr("id", "yAxis2")
-                        .attr("class", "axisPop")
-                        .attr("transform", "translate(14,"+(height/2-100)+")")
-                        .call(yAxis2);
-
-
-                        var areaAveragePop = d3.area()
-                        .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
-                        .y1(function(d) { return yScale2(popData[d]) })
-                        .y0(99)
-                  
-                  var ticksX3 = xScale2.ticks(51);
-                  var tickFormatX3 = xScale2.tickFormat(51);
-                  ticksX3.map(tickFormatX3);
-                  var xAxis3 = d3.axisBottom(xScale2);
-                      var plotXAxis3 = svg2.append("g")
+                  // Graph 4
+                  svg2.append("g")
                     .attr("class", "axisPop")
-                    .attr("transform", "translate(4,"+(height/4)+")")
-                    .call(xAxis3);
-
-                    var yScale3 = d3.scaleLinear().domain(assetExtent).range([100,0]);
-                      
-                        var yAxis3 = d3.axisLeft(yScale3);
-                        var ticksY3 = yScale3.ticks(20);
-               var tickFormatY3 = yScale3.tickFormat(20);
-              ticksY3.map(tickFormatY3);
-                          var plotYAxis3 = svg2.append("g")
-                          .attr("id", "yAxis3")
-                        .attr("class", "axisAssets")
-                        .attr("transform", "translate(14,"+(height/4-100)+")")
-                        .call(yAxis3);
-
-
-                d3.path()
-
-
-           var yScale4 = d3.scaleLog().domain(averageAssets[0], averageAssets[averageAssets.length-1]).range([100,0]);
-                      
-                        var yAxis4 = d3.axisLeft(yScale3);
-                        var ticksY4 = yScale4.ticks(20);
-               var tickFormatY4 = yScale4.tickFormat(20);
-              ticksY3.map(tickFormatY4);
-                          var plotYAxis4 = svg2.append("g")
-                          .attr("id", "yAxis4")
-                        .attr("class", "axisAssets")
-                        .attr("transform", "translate(14,"+(3*height/4 -100)+")")
-                        .call(yAxis4);
-
-                        var ticksX4 = xScale2.ticks(51);
-                  var tickFormatX4 = xScale2.tickFormat(51);
-                  ticksX4.map(tickFormatX4);
-                  var xAxis4 = d3.axisBottom(xScale2);
-                      var plotXAxis4 = svg2.append("g")
-                    .attr("class", "axisPop")
-                    .attr("transform", "translate(4,"+(3*height/4)+")")
-                    .call(xAxis4);
-
-
-                      var ticksX5 = xScale2.ticks(51);
-                    var tickFormatX5 = xScale2.tickFormat(51);
-                    ticksX5.map(tickFormatX5);
-                    var xAxis5 = d3.axisBottom(xScale2);
-                        var plotXAxis5 = svg2.append("g")
-                      .attr("class", "axisPop")
-                      .attr("transform", "translate(4,"+(height-20)+")")
-                      .call(xAxis5);
-
+                    .attr("transform", "translate(18, 560)")
+                    .call(xAxis2);
 
                   function zoomInfo(d){
                       popData = [];
@@ -694,9 +661,9 @@
               }
 
 
-              
 
-                        
+
+
 
 
 
