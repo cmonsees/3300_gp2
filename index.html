@@ -278,6 +278,8 @@
         stat.s55 = [];
         stat.s56 = [];
 
+        var stateName = '';
+
         for(var i = 1; i<57; i++){
             s = String(i);
             if (i < 10){
@@ -393,14 +395,7 @@
                  .style("float", "right");
               var svg2_width = document.getElementsByTagName("svg")[1].getClientRects()[0].width;
 
-              svg2.append("text")
-                .attr("id", "svg2_title")
-                .attr("x", 0)
-                .attr("y", 24)
-                .style("font-size", "22px")
-                .style("font-weight", 700)
-                .style("font-family", "'Alfa Slab One', sans-serif")
-                .text("Biggest failure of 1934");
+
 
               svg2.append("text")
                 .attr("id", "svg2_subtitle")
@@ -408,7 +403,7 @@
                 .attr("y", 50)
                 .style("font-size", "18px")
                 .style("font-weight", 400)
-                .text("BANK OF AMERICA TRUST CO.");
+                .text("");
 
               var currentYear = 1934;
               // Map setup
@@ -602,6 +597,29 @@
                       averageManagement[num]/=51;
                   }
 
+                  //get the average privatization
+                  var averagePrivatization = [];
+                  for(var num = 0; num < 90; num++){
+                      averagePrivatization[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].PRIVATIZATION)) {
+                              averagePrivatization[year] += stateData[year].PRIVATIZATION;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averagePrivatization[num]/=51;
+                  }
+
                   //get an average of the populations for each year
                   var averagePopulation = [];
                   for(var y = 0; y <9; y++){
@@ -622,6 +640,7 @@
                           averagePopulation[8] += populationData[a]['2010'] / 50;
                       };
                   }
+                  console.log(averagePopulation);
 
                   var populationExtentAvg = d3.extent(averagePopulation);
                   var populationExtent = totalPopulationMinMax(populationData);
@@ -673,6 +692,21 @@
                      .style("font-size", 12)
                      .style("fill", "#cccccc")
                      .text("Assets Lost");
+                  svg2.append("text") // Legend
+                      .attr("x", 325)
+                      .attr("y", 100)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#cccccc")
+                      .text("U.S. Average Per State");
+                  svg2.append("text") // Legend
+                      .attr("x", 325)
+                      .attr("y", 370)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#cccccc")
+                      .text("U.S. Average Per State");
+
                   var g1Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
@@ -732,7 +766,7 @@
                      .style("text-anchor","middle")
                      .style("font-size", 12)
                      .style("fill", "#cccccc")
-                     .text("Graph 2");
+                     .text("Transaction Type");
                   var g2Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
@@ -787,7 +821,7 @@
                     var countie4 = 0;
                     var managementLine = d3.area()
                     .x(function(d) { countie4++; return xScale2(scaleAssetIndex(countie4-1)) })
-                    .y1(function(d) { return yScale2TransferAvg(d) })
+                    .y1(function(d) { return yScale2ManagementAvg(d) })
                     .y0(70)
                     svg2.append("path")
                     .datum(averageManagement)
@@ -795,6 +829,7 @@
                     .attr("fill-opacity", ".01")
                     .attr("d", managementLine)
                     .attr("transform", "translate(40, 230)");
+
                     svg2.append("rect")
                       .attr("x", 55)
                       .attr("y", 335)
@@ -843,6 +878,21 @@
                       .attr("fill", "#ccc")
                       .style("font-size", 12)
                       .text("Management")
+
+                    var privateExtent = d3.extent(averagePrivatization);
+                    var yScale2PrivatizationAvg = d3.scaleLinear().domain(privateExtent).range([70,0]);
+                    var countie5 = 0;
+                    var privatizationLine = d3.area()
+                    .x(function(d) { countie5++; return xScale2(scaleAssetIndex(countie5-1)) })
+                    .y1(function(d) { return yScale2PrivatizationAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averagePrivatization)
+                    .attr("id", "privatizationLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", privatizationLine)
+                    .attr("transform", "translate(40, 230)");
+
 
                 // Graph 3
                 svg2.append("g")
@@ -936,7 +986,7 @@
                    .style("text-anchor","middle")
                    .style("font-size", 12)
                    .style("fill", "#cccccc")
-                   .text("Graph 4");
+                   .text("Institution Type");
                 var g4Handle = svg2.insert("rect")
                   .attr("height", 70)
                   .attr("width", 1)
@@ -946,9 +996,39 @@
                   .attr("fill", "#a9a9a9")
                   .attr("id", "g4Handle")
 
+
+                  var stateName = svg2.append("text") // Legend
+                      .attr("x", 450)
+                      .attr("y", 100)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#ff9999")
+                      .text("");
+                  var stateName2 = svg2.append("text") // Legend
+                      .attr("x", 450)
+                      .attr("y", 370)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#ff9999")
+                      .text("");
+                  var title = svg2.append("text")
+                      .attr("id", "svg2_title")
+                      .attr("x", 0)
+                      .attr("y", 24)
+                      .style("font-size", "22px")
+                      .style("font-weight", 700)
+                      .style("font-family", "'Alfa Slab One', sans-serif")
+                      .text("United States Average Data");
                 function zoomInfo(d){
                   popData = [];
                   var state = popIndexMap.get(d.id);
+
+                  stateName.text(state.State);
+                  stateName2.text(state.State);
+                  title.text(state.State + " Data");
+
+
+
                   //grab the population data of the clicked state
                   for(var i = 1930; i <= 2010; i= i + 10){
                       year = String(i);
@@ -959,6 +1039,7 @@
                   stateid = 's'+stateid;
                   //Population Graph
                   var stateArray = stat[stateid];
+                  console.log(stateArray);
                   var popArray = popData;
                   //console.log(stateArray);
                   //var popArrayExtent = populationMinMax(popArray);
@@ -1119,6 +1200,38 @@
                     .transition()
                     .attr("d", managementLine)
                     .duration(500);
+
+                    //plot Privatization
+                var privatizationArray = []
+                for(var num = 0; num < 90; num++){
+                      privatizationArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].PRIVATIZATION)) {
+                              privatizationArray[year] += stateArray[year].PRIVATIZATION;
+                          }
+                      }
+                    var privatizationExtent = d3.extent(privatizationArray);
+                    console.log(privatizationExtent);
+                    var yScale2Privatization = d3.scaleLinear().domain(privatizationExtent).range([70,0]);
+                    var scaleThisPrivatizationIndex = d3.scaleLinear().domain([0,privatizationArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+
+                   var count5 = -1
+                    var privatizationLine = d3.area()
+                    .x(function(d) { count5++; return xScale2(scaleThisPrivatizationIndex(count5-1)) })
+                    .y1(function(d) { return yScale2Privatization(d) })
+                    .y0(70)
+                    //console.log(privatizationArray);
+                    d3.select("path#privatizationLine")
+                    .datum(privatizationArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff6666")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", privatizationLine)
+                    .duration(500);
+
+
 
                 }
 
