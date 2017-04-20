@@ -51,7 +51,7 @@
       </div>
 
       <div class='col2' style='width:60%;'>
-        <h2 style='color: #000; text-align: left; font-size: 22px; margin-bottom:5px' id='crisis_title'>Great Depression</h2>
+        <h2 style='color: #000; text-align: left; font-size: 22px; margin-bottom:5px; letter-spacing:0' id='crisis_title'>Great Depression</h2>
         <div class='text_col'>
           <p id='crisis_text'>
             The Great Depression was the deepest and longest-lasting economic downturn
@@ -240,7 +240,7 @@
               // Set up document
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
-              var height = 600;
+              var height = 650;
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
@@ -301,7 +301,7 @@
                 .attr("x", 0)
                 .attr("y", 57)
                 .style("font-size", "12px")
-                .text("-$10000");
+                .text("-$–");
 
               svg.append("text")
                 .attr("id", "legendMax")
@@ -309,7 +309,14 @@
                 .attr("y", 57)
                 .attr("text-anchor", "end")
                 .style("font-size", "12px")
-                .text("-$10000");
+                .text("-$–");
+
+                svg.append("text")
+                  .attr("x", 0)
+                  .attr("y", height)
+                  .style("font-size", "12px")
+                  .style("fill", "#cccccc")
+                  .text("Assets lost (log scale)");
 
               // End legend setup
 
@@ -408,8 +415,8 @@
                       //
                   }
 
-                var yearMin = parseInt(yearMinMax[0]+"000");
-                var yearMax = parseInt(yearMinMax[1]+"000");
+                var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
+                var yearMax = Intl.NumberFormat().format(parseInt(yearMinMax[1]+"000"));
                 svg.select("#legendMin")
                   .text("-$"+yearMin)
                 svg.select("#legendMax")
@@ -458,8 +465,8 @@
                     .text(biggestFail.name);
                 }
 
-                var yearMin = parseInt(yearMinMax[0]+"000");
-                var yearMax = parseInt(yearMinMax[1]+"000");
+                var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
+                var yearMax = Intl.NumberFormat().format(parseInt(yearMinMax[1]+"000"));
                 svg.select("#legendMin")
                   .text("-$"+yearMin)
                 svg.select("#legendMax")
