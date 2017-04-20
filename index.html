@@ -75,7 +75,7 @@
                          'CO': 08, 'CT': 09, 'DE': 10, 'DC': 11, 'FL': 12,
                          'GA': 13, 'HI': 15, 'ID': 16, 'IL': 17, 'IN': 18,
                          'IA': 19, 'KS': 20, 'KY': 21, 'LA': 22, 'ME': 23,
-                         'MD': 24, 'MA': 25, 'MI': 26, 'MN': 27, 'MI': 28,
+                         'MD': 24, 'MA': 25, 'MI': 26, 'MN': 27, 'MS': 28,
                          'MO': 29, 'MT': 30, 'NE': 31, 'NV': 32, 'NH': 33,
                          'NJ': 34, 'NM': 35, 'NY': 36, 'NC': 37, 'ND': 38,
                          'OH': 39, 'OK': 40, 'OR': 41, 'PA': 42, 'RI': 44,
@@ -173,62 +173,84 @@
 
         var bankData = [];
         var populationData =[];
-        var s01 = [];
-        var s02 = [];
-        var s03 = [];
-        var s04 = [];
-        var s05 = [];
-        var s06 = [];
-        var s07 = [];
-        var s08 = [];
-        var s09 = [];
-        var s10 = [];
-        var s11 = [];
-        var s12 = [];
-        var s13 = [];
-        var s14 = [];
-        var s15 = [];
-        var s16 = [];
-        var s17 = [];
-        var s18 = [];
-        var s19 = [];
-        var s20 = [];
-        var s21 = [];
-        var s22 = [];
-        var s23 = [];
-        var s24 = [];
-        var s25 = [];
-        var s26 = [];
-        var s27 = [];
-        var s28 = [];
-        var s29 = [];
-        var s30 = [];
-        var s31 = [];
-        var s32 = [];
-        var s33 = [];
-        var s34 = [];
-        var s35 = [];
-        var s36 = [];
-        var s37 = [];
-        var s38 = [];
-        var s39 = [];
-        var s40 = [];
-        var s41 = [];
-        var s42 = [];
-        var s43 = [];
-        var s44 = [];
-        var s45 = [];
-        var s46 = [];
-        var s47 = [];
-        var s48 = [];
-        var s49 = [];
-        var s50 = [];
-        var s51 = [];
-        var s52 = [];
-        var s53 = [];
-        var s54 = [];
-        var s55 = [];
-        var s56 = [];
+        var stat = [];
+        stat.s01 = [];
+        stat.s02 = [];
+        stat.s03 = [];
+        stat.s04 = [];
+        stat.s05 = [];
+        stat.s06 = [];
+        stat.s07 = [];
+        stat.s08 = [];
+        stat.s09 = [];
+        stat.s10 = [];
+        stat.s11 = [];
+        stat.s12 = [];
+        stat.s13 = [];
+        stat.s14 = [];
+        stat.s15 = [];
+        stat.s16 = [];
+        stat.s17 = [];
+        stat.s18 = [];
+        stat.s19 = [];
+        stat.s20 = [];
+        stat.s21 = [];
+        stat.s22 = [];
+        stat.s23 = [];
+        stat.s24 = [];
+        stat.s25 = [];
+        stat.s26 = [];
+        stat.s27 = [];
+        stat.s28 = [];
+        stat.s29 = [];
+        stat.s30 = [];
+        stat.s31 = [];
+        stat.s32 = [];
+        stat.s33 = [];
+        stat.s34 = [];
+        stat.s35 = [];
+        stat.s36 = [];
+        stat.s37 = [];
+        stat.s38 = [];
+        stat.s39 = [];
+        stat.s40 = [];
+        stat.s41 = [];
+        stat.s42 = [];
+        stat.s43 = [];
+        stat.s44 = [];
+        stat.s45 = [];
+        stat.s46 = [];
+        stat.s47 = [];
+        stat.s48 = [];
+        stat.s49 = [];
+        stat.s50 = [];
+        stat.s51 = [];
+        stat.s52 = [];
+        stat.s53 = [];
+        stat.s54 = [];
+        stat.s55 = [];
+        stat.s56 = [];
+
+        for(var i = 1; i<57; i++){
+            s = String(i);
+            if (i < 10){
+                s = "0"+i;
+            }
+            s = "s"+s;
+            for (var y = 0; y < 90; y++){
+                stat[s][y] = {
+                    numAssets: 0,
+                    MERGER: 0,
+                    ACQUISITION: 0,
+                    PAYOUT: 0,
+                    PRIVATIZATION: 0,
+                    TRANSFER: 0,
+                    'COMMERCIAL BANK': 0,
+                    'SAVINGS ASSOCIATION': 0,
+                    'SAVINGS BANK': 0
+                };
+            }
+        }
 
         d3.queue()
           .defer(d3.csv, "data/banks.csv", function(data) { formatData(bankData, data); })
@@ -356,10 +378,27 @@
                   .extent([[-98 - 45, 38 - 45], [-98 + 45, 38 + 45]])
                   .step([5, 5]);
 
+             
+
               function showMap(year) {
                 var yearMinMax = yearAssets(timeData, year);
                 var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
                 var selectedState;
+
+                  bankData.forEach(function(f){
+                      var fips = f.headquartersFips;
+                      if(f.headquartersFips != undefined) {
+                          if (fips < 10) {
+                              fips = '0' + String(fips);
+                          }
+                          var i = "s" + String(fips);
+                          stat[i][f.failDate.getFullYear() - 1930][f.institutionType] += 1;
+                          stat[i][f.failDate.getFullYear() - 1930][f.transactionType] += 1;
+                          stat[i][f.failDate.getFullYear() - 1930].numAssets += f.totalAssets;
+
+                      }
+
+                  })
 
                 svg.append("g") // individual state fills
                   .attr("id", "stateMap")
@@ -402,17 +441,94 @@
 
                   });
 
+
+                  //get an average of the assets for each year;
+
+                //get an average of the values for each object;
+
+                  var averageAssets = [];
+                  for(var num = 0; num < 90; num++){
+                      averageAssets[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].numAssets)) {
+                              averageAssets[year] += stateData[year].numAssets;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageAssets[num]/=51;
+                  }
+
+                  //get an average of the populations for each year
+                  var averagePopulation = [];
+                  for(var y = 0; y <9; y++){
+                      averagePopulation[y] = 0;
+                  }
+                  console.log(averagePopulation)
+                  for(a = 0; a < 52; a++){
+                      console.log(populationData[a]['2010']);
+                      averagePopulation[0] += populationData[a]['1930']/51;
+                      averagePopulation[1] += populationData[a]['1940']/51;
+                      averagePopulation[2] += populationData[a]['1950']/51;
+                      averagePopulation[3] += populationData[a]['1960']/51;
+                      averagePopulation[4] += populationData[a]['1970']/51;
+                      averagePopulation[5] += populationData[a]['1980']/51;
+                      averagePopulation[6] += populationData[a]['1990']/51;
+                      averagePopulation[7] += populationData[a]['2000']/51;
+                      if(a<51) {
+                          averagePopulation[8] += populationData[a]['2010'] / 50;
+                      };
+                  }
+
+
+
                   function zoomInfo(d){
                       popData = [];
+                      d3.select("#yAxis2").remove();
                       var state = popIndexMap.get(d.id);
-                      console.log(state);
                       //grab the population data of the clicked state
                       for(var i = 1930; i <= 2010; i= i + 10){
                           year = String(i);
                           popData.push(state[year]);
                       }
-                      id.text(popData);
+                      stateid = d.id;
+                      if (stateid<10){stateid = '0' + stateid;}
+                      stateid = 's'+stateid;
+                      var stateArray = stat[stateid];
+
+                     // console.log(stateArray);
+                      var popArray = popData;
+                      id.text(popArray);
+
+                      var yScale2 = d3.scaleLog().domain(popArray[0], popArray[popArray.length-1]).range([100,0]);
+                      
+                        
+                        var yAxis2 = d3.axisLeft(yScale2);
+                          var plotYAxis2 = svg2.append("g")
+                          .attr("id", "yAxis2")
+                          .attr("transform", "translate(4,"+(height/2 - 100)+")")
+                        .attr("class", "axisPop")
+                        .call(yAxis2);
+
+                        
+                      //var popArray = popData;
+                      //id.text(popArray);
+                      var area = d3.area()
+                        .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
+                        .y1(function(d) { return yScale2(popData[d]) })
+                        .y0(99)
                       //
+                      
+
                   }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
@@ -489,6 +605,23 @@
                     .text("");
                 }
               }
+
+
+               var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
+              var svg2Padding = 10;
+              var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
+              var ticksX2 = xScale2.ticks(51);
+              var tickFormatX2 = xScale2.tickFormat(51);
+              ticksX2.map(tickFormatX2);
+              var xAxis2 = d3.axisBottom(xScale2);
+                  var plotXAxis2 = svg2.append("g")
+                .attr("class", "axisPop")
+                .attr("transform", "translate(4,"+(height/2)+")")
+                .call(xAxis2);
+
+
+
+                
 
               showMap(currentYear);
 
