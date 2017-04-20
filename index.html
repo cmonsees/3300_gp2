@@ -440,12 +440,12 @@
 
                   });
 
-                  //get an average of the values for each object;
+                  //get an average of the assets for each year;
                   var averageAssets = [];
                   for(var num = 0; num < 90; num++){
                       averageAssets[num] = 0;
                   }
-                  console.log(averageAssets);
+
                   for(var s = 1; s < 57; s++) {
                       var state = '';
                       state = s;
@@ -456,7 +456,7 @@
                       var stateData = stat[state];
                       for(year = 0; year < 90; year++){
                           if(!isNaN(stateData[year].numAssets)) {
-                              console.log(stateData[year].numAssets);
+
                               averageAssets[year] += stateData[year].numAssets;
                           }
                       }
@@ -464,13 +464,32 @@
                   for(var num = 0; num < 90; num++){
                       averageAssets[num]/=51;
                   }
-                  
+
+                  //get an average of the populations for each year
+                  var averagePopulation = [];
+                  for(var y = 0; y <9; y++){
+                      averagePopulation[y] = 0;
+                  }
+                  console.log(averagePopulation)
+                  for(a = 0; a < 52; a++){
+                      console.log(populationData[a]['2010']);
+                      averagePopulation[0] += populationData[a]['1930']/51;
+                      averagePopulation[1] += populationData[a]['1940']/51;
+                      averagePopulation[2] += populationData[a]['1950']/51;
+                      averagePopulation[3] += populationData[a]['1960']/51;
+                      averagePopulation[4] += populationData[a]['1970']/51;
+                      averagePopulation[5] += populationData[a]['1980']/51;
+                      averagePopulation[6] += populationData[a]['1990']/51;
+                      averagePopulation[7] += populationData[a]['2000']/51;
+                      if(a<51) {
+                          averagePopulation[8] += populationData[a]['2010'] / 50;
+                      };
+                  }
 
 
                   function zoomInfo(d){
                       popData = [];
                       var state = popIndexMap.get(d.id);
-                      console.log(state);
                       //grab the population data of the clicked state
                       for(var i = 1930; i <= 2010; i= i + 10){
                           year = String(i);
