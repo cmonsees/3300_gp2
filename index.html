@@ -278,6 +278,8 @@
         stat.s55 = [];
         stat.s56 = [];
 
+        var stateName = '';
+
         for(var i = 1; i<57; i++){
             s = String(i);
             if (i < 10){
@@ -287,7 +289,7 @@
             for (var y = 0; y < 90; y++){
                 stat[s][y] = {
                     numAssets: 0,
-                    MERGER: 0,
+                    MANAGEMENT: 0,
                     ACQUISITION: 0,
                     PAYOUT: 0,
                     PRIVATIZATION: 0,
@@ -393,14 +395,7 @@
                  .style("float", "right");
               var svg2_width = document.getElementsByTagName("svg")[1].getClientRects()[0].width;
 
-              svg2.append("text")
-                .attr("id", "svg2_title")
-                .attr("x", 0)
-                .attr("y", 24)
-                .style("font-size", "22px")
-                .style("font-weight", 700)
-                .style("font-family", "'Alfa Slab One', sans-serif")
-                .text("Biggest failure of 1934");
+
 
               svg2.append("text")
                 .attr("id", "svg2_subtitle")
@@ -408,7 +403,7 @@
                 .attr("y", 50)
                 .style("font-size", "18px")
                 .style("font-weight", 400)
-                .text("BANK OF AMERICA TRUST CO.");
+                .text("");
 
               var currentYear = 1934;
               // Map setup
@@ -575,6 +570,7 @@
                           averagePopulation[8] += populationData[a]['2010'] / 50;
                       };
                   }
+                  console.log(averagePopulation);
 
                   var populationExtentAvg = d3.extent(averagePopulation);
                   var populationExtent = totalPopulationMinMax(populationData);
@@ -626,6 +622,21 @@
                      .style("font-size", 12)
                      .style("fill", "#cccccc")
                      .text("Assets Lost");
+                  svg2.append("text") // Legend
+                      .attr("x", 325)
+                      .attr("y", 100)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#cccccc")
+                      .text("U.S. Average Per State");
+                  svg2.append("text") // Legend
+                      .attr("x", 325)
+                      .attr("y", 370)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#cccccc")
+                      .text("U.S. Average Per State");
+
                   var g1Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
@@ -661,7 +672,7 @@
                      .style("text-anchor","middle")
                      .style("font-size", 12)
                      .style("fill", "#cccccc")
-                     .text("Graph 2");
+                     .text("Transaction Type");
                   var g2Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
@@ -768,7 +779,7 @@
                    .style("text-anchor","middle")
                    .style("font-size", 12)
                    .style("fill", "#cccccc")
-                   .text("Graph 4");
+                   .text("Institution Type");
                 var g4Handle = svg2.insert("rect")
                   .attr("height", 70)
                   .attr("width", 1)
@@ -778,9 +789,39 @@
                   .attr("fill", "#a9a9a9")
                   .attr("id", "g4Handle")
 
+
+                  var stateName = svg2.append("text") // Legend
+                      .attr("x", 450)
+                      .attr("y", 100)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#ff9999")
+                      .text("");
+                  var stateName2 = svg2.append("text") // Legend
+                      .attr("x", 450)
+                      .attr("y", 370)
+                      .style("text-anchor","middle")
+                      .style("font-size", 12)
+                      .style("fill", "#ff9999")
+                      .text("");
+                  var title = svg2.append("text")
+                      .attr("id", "svg2_title")
+                      .attr("x", 0)
+                      .attr("y", 24)
+                      .style("font-size", "22px")
+                      .style("font-weight", 700)
+                      .style("font-family", "'Alfa Slab One', sans-serif")
+                      .text("United States Average Data");
                 function zoomInfo(d){
                   popData = [];
                   var state = popIndexMap.get(d.id);
+
+                  stateName.text(state.State);
+                  stateName2.text(state.State);
+                  title.text(state.State + " Data");
+
+
+
                   //grab the population data of the clicked state
                   for(var i = 1930; i <= 2010; i= i + 10){
                       year = String(i);
@@ -791,6 +832,7 @@
                   stateid = 's'+stateid;
                   //Population Graph
                   var stateArray = stat[stateid];
+                  console.log(stateArray);
                   var popArray = popData;
                   //console.log(stateArray);
                   //var popArrayExtent = populationMinMax(popArray);
