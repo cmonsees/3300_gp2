@@ -469,9 +469,9 @@
                   for(var y = 0; y <9; y++){
                       averagePopulation[y] = 0;
                   }
-                  console.log(averagePopulation)
+                 // console.log(averagePopulation)
                   for(a = 0; a < 52; a++){
-                      console.log(populationData[a]['2010']);
+                     // console.log(populationData[a]['2010']);
                       averagePopulation[0] += populationData[a]['1930']/51;
                       averagePopulation[1] += populationData[a]['1940']/51;
                       averagePopulation[2] += populationData[a]['1950']/51;
@@ -487,12 +487,18 @@
 
                   var populationExtent = d3.extent(averagePopulation);
                   var assetExtent = d3.extent(averageAssets);
-                  console.log(assetExtent);
+                //  console.log(assetExtent);
                    var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
-
                   var svg2Padding = 10;
 
                   var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
+                  var scalePopulationIndex = d3.scaleLinear().domain([0,averagePopulation.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var scaleAssetIndex = d3.scaleLinear().domain([0,averageAssets.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+
+                var yScale2AveragePop = d3.scaleLinear().domain(populationExtent).range([100,0]);
+
+
+
                   var ticksX2 = xScale2.ticks(51);
                   var tickFormatX2 = xScale2.tickFormat(51);
                   ticksX2.map(tickFormatX2);
@@ -502,12 +508,15 @@
                     .attr("transform", "translate(4,"+(height/2)+")")
                     .call(xAxis2);
 
+               //   var area = d3.area()
+               // .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
+               // .y1(function(d) { return yScale(d.totalDeposits) })
+                //.y0(39)
 
-                var yScale2Average = d3.scaleLinear().domain(populationExtent).range([100,0]);
                       
-                        var yAxis2 = d3.axisLeft(yScale2Average);
-                        var ticksY2 = yScale2Average.ticks(20);
-               var tickFormatY2 = yScale2Average.tickFormat(20);
+                        var yAxis2 = d3.axisLeft(yScale2AveragePop);
+                        var ticksY2 = yScale2AveragePop.ticks(20);
+               var tickFormatY2 = yScale2AveragePop.tickFormat(20);
               ticksY2.map(tickFormatY2);
                           var plotYAxis2 = svg2.append("g")
                           .attr("id", "yAxis2")
@@ -517,9 +526,16 @@
 
 
                         var areaAveragePop = d3.area()
-                        .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
-                        .y1(function(d) { return yScale2(popData[d]) })
+                        .x(function(d) { return xScale2(scalePopulationIndex(averagePopulation.indexOf(d))) })
+                        .y1(function(d) { return yScale2AveragePop(d) })
                         .y0(99)
+
+                        svg2.append("path")
+                        .datum(averagePopulation)
+                        .attr("fill", "#00ffff")
+                        .attr("opacity", ".4")
+                        .attr("d", areaAveragePop)
+                        .attr("transform", "translate(14,"+(height/2-100)+")");
                   
                   var ticksX3 = xScale2.ticks(51);
                   var tickFormatX3 = xScale2.tickFormat(51);
@@ -542,8 +558,23 @@
                         .attr("transform", "translate(14,"+(height/4-100)+")")
                         .call(yAxis3);
 
+                        var areaAverageAsset = d3.area()
+                        .x(function(d) { return xScale2(scaleAssetIndex(averageAssets.indexOf(d))) })
+                        .y1(function(d) { return yScale3(d) })
+                        .y0(99)
 
-                d3.path()
+                        svg2.append("path")
+                        .datum(averageAssets)
+                        .attr("fill", "#d9d9d9")
+                        .attr("d", areaAverageAsset)
+                        .attr("opacity", ".4")
+                        .attr("stroke", "black")
+                        .attr("transform", "translate(14,"+(height/4-100)+")");
+
+                        
+
+
+                //d3.path()
 
 
            var yScale4 = d3.scaleLog().domain(averageAssets[0], averageAssets[averageAssets.length-1]).range([100,0]);
@@ -591,28 +622,28 @@
                       if (stateid<10){stateid = '0' + stateid;}
                       stateid = 's'+stateid;
                       var stateArray = stat[stateid];
-                      console.log(stateArray);
+                      //console.log(stateArray);
                      // console.log(stateArray);
                       var popArray = popData;
+                       var popArrayExtent = d3.extent(popArray);
                       //id.text(popArray);
+                       var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                       var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([100,0]);
 
-                      var yScale2 = d3.scaleLog().domain(popArray[0], popArray[popArray.length-1]).range([100,0]);
-
-
-                        var yAxis2 = d3.axisLeft(yScale2);
-                          var plotYAxis2 = svg2.append("g")
-                          .attr("id", "yAxis2")
-                          .attr("transform", "translate(20,"+ (height/2 - 100)+")")
-                        .attr("class", "axisPop")
-                        .call(yAxis2);
-
-
-                      //var popArray = popData;
-                      //id.text(popArray);
-                      var area = d3.area()
-                        .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
-                        .y1(function(d) { return yScale2(popData[d]) })
+                      var areaThisPopulation = d3.area()
+                        .x(function(d) { return xScale2(scaleThisPopulationIndex(popArray.indexOf(d))) })
+                        .y1(function(d) { return yScale2Pop(d) })
                         .y0(99)
+
+                         svg2.append("path")
+                        .datum(popArray)
+                        .attr("fill", "#ff0000")
+                        .attr("opacity", ".4")
+                        .attr("d", areaThisPopulation)
+                        .attr("stroke", "black")
+                        .attr("transform", "translate(14,"+(height/2-100)+")");
+
+
                       //
 
 
