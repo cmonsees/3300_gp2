@@ -132,13 +132,12 @@
           for (var t= 0; t< popArray.length; t++) {
             if (parseInt(popArray[t]) > max) { max = parseInt(popArray[t]); }
             if (parseInt(popArray[t]) < min) { min = parseInt(popArray[t]); }
-            //console.log(min);
-             //console.log(max);
+
           }
           return ([min, max]);
         }
         function totalPopulationMinMax(popArray){
-         // console.log(popArray)
+
           var max = parseInt(popArray[0]['1930']);
           var min = parseInt(popArray[0]['1930']);
           for(a = 0; a < 52; a++){
@@ -695,9 +694,9 @@
                   for(var y = 0; y <9; y++){
                       averagePopulation[y] = 0;
                   }
-                 // console.log(averagePopulation)
+
                   for(a = 0; a < 52; a++){
-                     // console.log(populationData[a]['2010']);
+
                       averagePopulation[0] += populationData[a]['1930']/51;
                       averagePopulation[1] += populationData[a]['1940']/51;
                       averagePopulation[2] += populationData[a]['1950']/51;
@@ -710,11 +709,12 @@
                           averagePopulation[8] += populationData[a]['2010'] / 50;
                       };
                   }
-                  console.log(averagePopulation);
+                  
 
                   var populationExtentAvg = d3.extent(averagePopulation);
                   var populationExtent = totalPopulationMinMax(populationData);
-                  //console.log(populationExtent);
+                  
+
                   var assetExtent = d3.extent(averageAssets);
 
                   var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
@@ -1163,14 +1163,9 @@
                   stateid = 's'+stateid;
                   //Population Graph
                   var stateArray = stat[stateid];
-                  console.log(stateArray);
                   var popArray = popData;
 
-                  //var popArrayExtent = populationMinMax(popArray);
-                  //var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                  //var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([70,0]);
-
-                 //console.log(popArrayExtent);
+ 
                   var areaThisPopulation = d3.area()
                     .x(function(d) { return xScale2(scalePopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
@@ -1315,7 +1310,7 @@
                     .x(function(d) { count4++; return xScale2(scaleThisManagementIndex(count4-1)) })
                     .y1(function(d) { return yScale2Management(d) })
                     .y0(70)
-                    //console.log(managementArray);
+
                     d3.select("path#managementLine")
                     .datum(managementArray)
                     .attr("fill-opacity", ".01")
@@ -1336,7 +1331,7 @@
                           }
                       }
                     var privatizationExtent = d3.extent(privatizationArray);
-                   // console.log(privatizationExtent);
+
                     var yScale2Privatization = d3.scaleLinear().domain(privatizationExtent).range([70,0]);
                     var scaleThisPrivatizationIndex = d3.scaleLinear().domain([0,privatizationArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
 
@@ -1345,7 +1340,7 @@
                     .x(function(d) { count5++; return xScale2(scaleThisPrivatizationIndex(count5-1)) })
                     .y1(function(d) { return yScale2Privatization(d) })
                     .y0(70)
-                    //console.log(privatizationArray);
+
                     d3.select("path#privatizationLine")
                     .datum(privatizationArray)
                     .attr("fill-opacity", ".01")
@@ -1425,7 +1420,7 @@
                               savingsBanks[year] += stateArray[year]['SAVINGS BANK'];
                           }
                       }
-                      console.log(savingsBanks);
+
                     var savingsBankExtent = d3.extent(savingsBanks);
                     var yScale2SavingsBank = d3.scaleLinear().domain(savingsBankExtent).range([70,0]);
                     var scaleThisSavingsBankIndex = d3.scaleLinear().domain([0,savingsBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
@@ -1526,7 +1521,7 @@
 
               // Create slider
               var yearScale = d3.scaleLinear().domain([0,width-4]).range([1934,2016]); // converts pixel-coordinates to years
-              var yearScaleSvg2 = d3.scaleLinear().domain([40,svg2_width-4]).range([1934,2016]);
+              var yearScaleSvg2 = d3.scaleLinear().domain([55,svg2_width-4]).range([1934,2016]);
 
               var xScale = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([4,width-8]); // converts years to pixel coordinates
               var ticks = xScale.ticks(51);
@@ -1553,8 +1548,7 @@
                 .on("click", function(){
                   //When the slider is clicked the handler moves and updates the slider
                   var newYear = parseInt(yearScale(d3.event.x))-17;
-                   //console.log(newYear);
-                   //console.log(d3.event.x);
+
                   assetsHandle.attr("x", yearScale.invert(newYear));
                   d3.select("#g1Handle").attr("x", yearScaleSvg2.invert(newYear));
                   d3.select("#g2Handle").attr("x", yearScaleSvg2.invert(newYear));
