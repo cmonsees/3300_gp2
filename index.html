@@ -173,62 +173,84 @@
 
         var bankData = [];
         var populationData =[];
-        var s01 = [];
-        var s02 = [];
-        var s03 = [];
-        var s04 = [];
-        var s05 = [];
-        var s06 = [];
-        var s07 = [];
-        var s08 = [];
-        var s09 = [];
-        var s10 = [];
-        var s11 = [];
-        var s12 = [];
-        var s13 = [];
-        var s14 = [];
-        var s15 = [];
-        var s16 = [];
-        var s17 = [];
-        var s18 = [];
-        var s19 = [];
-        var s20 = [];
-        var s21 = [];
-        var s22 = [];
-        var s23 = [];
-        var s24 = [];
-        var s25 = [];
-        var s26 = [];
-        var s27 = [];
-        var s28 = [];
-        var s29 = [];
-        var s30 = [];
-        var s31 = [];
-        var s32 = [];
-        var s33 = [];
-        var s34 = [];
-        var s35 = [];
-        var s36 = [];
-        var s37 = [];
-        var s38 = [];
-        var s39 = [];
-        var s40 = [];
-        var s41 = [];
-        var s42 = [];
-        var s43 = [];
-        var s44 = [];
-        var s45 = [];
-        var s46 = [];
-        var s47 = [];
-        var s48 = [];
-        var s49 = [];
-        var s50 = [];
-        var s51 = [];
-        var s52 = [];
-        var s53 = [];
-        var s54 = [];
-        var s55 = [];
-        var s56 = [];
+        var stat = [];
+        stat.s01 = [];
+        stat.s02 = [];
+        stat.s03 = [];
+        stat.s04 = [];
+        stat.s05 = [];
+        stat.s06 = [];
+        stat.s07 = [];
+        stat.s08 = [];
+        stat.s09 = [];
+        stat.s10 = [];
+        stat.s11 = [];
+        stat.s12 = [];
+        stat.s13 = [];
+        stat.s14 = [];
+        stat.s15 = [];
+        stat.s16 = [];
+        stat.s17 = [];
+        stat.s18 = [];
+        stat.s19 = [];
+        stat.s20 = [];
+        stat.s21 = [];
+        stat.s22 = [];
+        stat.s23 = [];
+        stat.s24 = [];
+        stat.s25 = [];
+        stat.s26 = [];
+        stat.s27 = [];
+        stat.s28 = [];
+        stat.s29 = [];
+        stat.s30 = [];
+        stat.s31 = [];
+        stat.s32 = [];
+        stat.s33 = [];
+        stat.s34 = [];
+        stat.s35 = [];
+        stat.s36 = [];
+        stat.s37 = [];
+        stat.s38 = [];
+        stat.s39 = [];
+        stat.s40 = [];
+        stat.s41 = [];
+        stat.s42 = [];
+        stat.s43 = [];
+        stat.s44 = [];
+        stat.s45 = [];
+        stat.s46 = [];
+        stat.s47 = [];
+        stat.s48 = [];
+        stat.s49 = [];
+        stat.s50 = [];
+        stat.s51 = [];
+        stat.s52 = [];
+        stat.s53 = [];
+        stat.s54 = [];
+        stat.s55 = [];
+        stat.s56 = [];
+
+        for(var i = 1; i<57; i++){
+            s = String(i);
+            if (i < 10){
+                s = "0"+i;
+            }
+            s = "s"+s;
+            for (var y = 0; y < 90; y++){
+                stat[s][y] = {
+                    numAssets: 0,
+                    MERGER: 0,
+                    ACQUISITION: 0,
+                    PAYOUT: 0,
+                    PRIVATIZATION: 0,
+                    TRANSFER: 0,
+                    'COMMERCIAL BANK': 0,
+                    'SAVINGS ASSOCIATION': 0,
+                    'SAVINGS BANK': 0
+                };
+            }
+        }
 
         d3.queue()
           .defer(d3.csv, "data/banks.csv", function(data) { formatData(bankData, data); })
@@ -352,6 +374,21 @@
                 var yearMinMax = yearAssets(timeData, year);
                 var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
                 var selectedState;
+
+                  bankData.forEach(function(f){
+                      var fips = f.headquartersFips;
+                      if(f.headquartersFips != undefined) {
+                          if (fips < 10) {
+                              fips = '0' + String(fips);
+                          }
+                          var i = "s" + String(fips);
+                          stat[i][f.failDate.getFullYear() - 1930][f.institutionType] += 1;
+                          stat[i][f.failDate.getFullYear() - 1930][f.transactionType] += 1;
+                          stat[i][f.failDate.getFullYear() - 1930].numAssets += f.totalAssets;
+
+                      }
+
+                  })
 
                 svg.append("g") // individual state fills
                   .attr("id", "stateMap")
