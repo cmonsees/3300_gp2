@@ -42,7 +42,7 @@
         </h2>
       </div>
 
-      <div id='viz' style='margin-bottom:65px'></div>
+      <div id='viz' style='margin-bottom:35px'></div>
 
       <div class='col1' style='width:35%;'>
         <h2 id='crisis_subtitle'>
@@ -240,7 +240,7 @@
               // Set up document
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
-              var height = 650;
+              var height = 640;
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
@@ -313,8 +313,8 @@
                 .text("-$–");
 
                 svg.append("text")
-                  .attr("x", 0)
-                  .attr("y", height)
+                  .attr("x", 7)
+                  .attr("y", height-10)
                   .style("font-size", "12px")
                   .style("fill", "#cccccc")
                   .text("Assets lost (log scale)");
@@ -349,7 +349,7 @@
               var us = data[1];
               var projection = d3.geoAlbersUsa()
                   .scale(900)
-                  .translate([width / 2, height / 2])
+                  .translate([width / 2, (height / 2)-5])
                   .precision(.1);
               var path = d3.geoPath()
                   .projection(projection);
@@ -504,7 +504,7 @@
                 .ticks(20)
               var plotXAxis = svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(4,"+(height-18)+")")
+                .attr("transform", "translate(4,"+(height-48)+")")
                 .call(xAxis);
 
               var assets = assetsMinMax(timeData);
@@ -516,7 +516,7 @@
                 .y0(39)
 
               var assetsSlider = svg.append("g")
-                .attr("transform", "translate(0,"+(height-57)+")")
+                .attr("transform", "translate(0,"+(height-87)+")")
                 .attr("id", "sliderPath")
                 .on("click", function(){
                   //When the slider is clicked the handler moves and updates the slider
