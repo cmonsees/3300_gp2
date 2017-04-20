@@ -449,6 +449,10 @@
                           year = String(i);
                           popData.push(state[year]);
                       }
+                      stateid = d.id;
+                      if (stateid<10){stateid = '0' + stateid;}
+                      stateid = 's'+stateid;
+                      console.log(stat[stateid]);
                       id.text(popData);
                       //
                   }
