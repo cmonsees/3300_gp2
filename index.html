@@ -311,7 +311,7 @@
               // Set up document
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
-              var height = 640;
+              var height = 700;
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
@@ -410,7 +410,7 @@
               var us = data[1];
               var projection = d3.geoAlbersUsa()
                   .scale(900)
-                  .translate([width / 2, (height / 2)-5])
+                  .translate([width / 2, (height / 2)-10])
                   .precision(.1);
               var path = d3.geoPath()
                   .projection(projection);
@@ -692,20 +692,6 @@
                      .style("font-size", 12)
                      .style("fill", "#cccccc")
                      .text("Assets Lost");
-                  svg2.append("text") // Legend
-                      .attr("x", 325)
-                      .attr("y", 100)
-                      .style("text-anchor","middle")
-                      .style("font-size", 12)
-                      .style("fill", "#cccccc")
-                      .text("U.S. Average Per State");
-                  svg2.append("text") // Legend
-                      .attr("x", 325)
-                      .attr("y", 370)
-                      .style("text-anchor","middle")
-                      .style("font-size", 12)
-                      .style("fill", "#cccccc")
-                      .text("U.S. Average Per State");
 
                   var g1Handle = svg2.insert("rect")
                     .attr("height", 70)
@@ -716,44 +702,44 @@
                     .attr("fill", "#a9a9a9")
                     .attr("id", "g1Handle")
                   svg2.append("rect")
-                    .attr("x", 55)
+                    .attr("x", 165)
                     .attr("y", 205)
                     .attr("height", 2)
                     .attr("width", 15)
                     .attr("fill", "#ff9999")
-                  svg2.append("text")
-                    .attr("x", 75)
+                  var stateName = svg2.append("text")
+                    .attr("x", 185)
                     .attr("y", 210)
                     .attr("fill", "#ccc")
                     .style("font-size", 12)
                     .text("State Data")
                   svg2.append("rect")
-                    .attr("x", 150)
+                    .attr("x", 55)
                     .attr("y", 205)
                     .attr("height", 2)
                     .attr("width", 15)
                     .attr("fill", "#ccc")
                   svg2.append("text")
-                    .attr("x", 170)
+                    .attr("x", 75)
                     .attr("y", 210)
                     .attr("fill", "#ccc")
                     .style("font-size", 12)
-                    .text("Average")
+                    .text("U.S. Average")
 
                   // Graph 2
                   var acquisitionExtent = d3.extent(averageAcq);
                   svg2.append("g")
                     .attr("class", "axisPop")
-                    .attr("transform", "translate("+svg2Padding+", 300)")
+                    .attr("transform", "translate("+svg2Padding+", 325)")
                     .call(d3.axisBottom(xScale2))
                   var yScale2AcqAvg = d3.scaleLinear().domain(acquisitionExtent).range([70,0]);
                   svg2.append("g")
 
-                    .attr("transform", "translate(40, 230)")
+                    .attr("transform", "translate(40, 255)")
                     .attr("id", "yAxisAcq")
                     .call(d3.axisLeft(yScale2AcqAvg)
                         .tickFormat(d3.format(".2s")))
-                    .attr("transform", "translate(55, 230)")
+                    .attr("transform", "translate(55, 255)")
                     .attr("class", "axisAssets")
                     .attr("id", "yAxis2")
                     .call(d3.axisLeft(yScale2AcqAvg)
@@ -761,17 +747,17 @@
                       .tickFormat(d3.format(".2s")));
                   svg2.append("text") // Label
                      .attr("transform", "rotate(-90)")
-                     .attr("x", -265)
+                     .attr("x", -290)
                      .attr("y", 15)
                      .style("text-anchor","middle")
                      .style("font-size", 12)
                      .style("fill", "#cccccc")
-                     .text("Transaction Type");
+                     .text("Failure Type");
                   var g2Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
                     .attr("x", 55)
-                    .attr("y", 230)
+                    .attr("y", 255)
                     .attr("rx",4)
                     .attr("fill", "#a9a9a9")
                     .attr("id", "g2Handle")
@@ -786,7 +772,7 @@
                     .attr("id", "acquisitionLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", acquisitionLine)
-                    .attr("transform", "translate(40, 230)");
+                    .attr("transform", "translate(40, 255)");
 
                     var payoutExtent = d3.extent(averagePayout);
                     var yScale2PayoutAvg = d3.scaleLinear().domain(payoutExtent).range([70,0]);
@@ -800,7 +786,7 @@
                     .attr("id", "payoutLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", payoutLine)
-                    .attr("transform", "translate(40, 230)");
+                    .attr("transform", "translate(40, 255)");
 
                      var transferExtent = d3.extent(averageTransfer);
                     var yScale2TransferAvg = d3.scaleLinear().domain(transferExtent).range([70,0]);
@@ -814,7 +800,7 @@
                     .attr("id", "transferLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", transferLine)
-                    .attr("transform", "translate(40, 230)");
+                    .attr("transform", "translate(40, 255)");
 
                     var managementExtent = d3.extent(averageManagement);
                     var yScale2ManagementAvg = d3.scaleLinear().domain(managementExtent).range([70,0]);
@@ -828,53 +814,53 @@
                     .attr("id", "managementLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", managementLine)
-                    .attr("transform", "translate(40, 230)");
+                    .attr("transform", "translate(40, 255)");
 
                     svg2.append("rect")
                       .attr("x", 55)
-                      .attr("y", 335)
+                      .attr("y", 360)
                       .attr("height", 2)
                       .attr("width", 15)
                       .attr("fill", "#f2c830")
                     svg2.append("text")
                       .attr("x", 75)
-                      .attr("y", 340)
+                      .attr("y", 365)
                       .attr("fill", "#ccc")
                       .style("font-size", 12)
-                      .text("Acquisitions")
+                      .text("Acquisition")
                     svg2.append("rect")
-                      .attr("x", 160)
-                      .attr("y", 335)
+                      .attr("x", 150)
+                      .attr("y", 360)
                       .attr("height", 2)
                       .attr("width", 15)
                       .attr("fill", "#ff7f00")
                     svg2.append("text")
-                      .attr("x", 180)
-                      .attr("y", 340)
+                      .attr("x", 170)
+                      .attr("y", 365)
                       .attr("fill", "#ccc")
                       .style("font-size", 12)
-                      .text("Payouts")
+                      .text("Payout")
                     svg2.append("rect")
-                      .attr("x", 245)
-                      .attr("y", 335)
+                      .attr("x", 230)
+                      .attr("y", 360)
                       .attr("height", 2)
                       .attr("width", 15)
                       .attr("fill", "#8f00ff")
                     svg2.append("text")
-                      .attr("x", 265)
-                      .attr("y", 340)
+                      .attr("x", 250)
+                      .attr("y", 365)
                       .attr("fill", "#ccc")
                       .style("font-size", 12)
                       .text("Transfer")
                     svg2.append("rect")
-                      .attr("x", 330)
-                      .attr("y", 335)
+                      .attr("x", 315)
+                      .attr("y", 360)
                       .attr("height", 2)
                       .attr("width", 15)
                       .attr("fill", "#ff00ff")
                     svg2.append("text")
-                      .attr("x", 350)
-                      .attr("y", 340)
+                      .attr("x", 335)
+                      .attr("y", 365)
                       .attr("fill", "#ccc")
                       .style("font-size", 12)
                       .text("Management")
@@ -891,17 +877,17 @@
                     .attr("id", "privatizationLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", privatizationLine)
-                    .attr("transform", "translate(40, 230)");
+                    .attr("transform", "translate(40, 265)");
 
 
                 // Graph 3
                 svg2.append("g")
                   .attr("class", "axisPop")
-                  .attr("transform", "translate("+svg2Padding+", 430)")
+                  .attr("transform", "translate("+svg2Padding+", 475)")
                   .call(d3.axisBottom(xScale2))
                 var yScale2AveragePop = d3.scaleLinear().domain(populationExtent).range([70,0]);
                 svg2.append("g")
-                  .attr("transform", "translate(55, 360)")
+                  .attr("transform", "translate(55, 405)")
                   .attr("id", "yAxis3")
                   .attr("class", "axisAssets")
                   .call(d3.axisLeft(yScale2Pop)
@@ -917,17 +903,17 @@
                   .attr("fill", "#d9d9d9")
                   .attr("opacity", "1")
                   .attr("d", areaAveragePop)
-                  .attr("transform", "translate("+svg2Padding+", 360)")
+                  .attr("transform", "translate("+svg2Padding+", 405)")
                 svg2.append("path") // state population
                   .datum(averagePopulation)
                   .attr("id", "populationLine")
                   .attr("fill", "#ff9999")
                   .attr("opacity", ".01")
                   .attr("d", areaAveragePop)
-                  .attr("transform", "translate("+svg2Padding+", 360)")
+                  .attr("transform", "translate("+svg2Padding+", 405)")
                 svg2.append("text") // Label
                    .attr("transform", "rotate(-90)")
-                   .attr("x", -395)
+                   .attr("x", -440)
                    .attr("y", 15)
                    .style("text-anchor","middle")
                    .style("font-size", 12)
@@ -937,51 +923,51 @@
                   .attr("height", 70)
                   .attr("width", 1)
                   .attr("x", 55)
-                  .attr("y", 360)
+                  .attr("y", 405)
                   .attr("rx",4)
                   .attr("fill", "#a9a9a9")
                   .attr("id", "g3Handle")
                 svg2.append("rect")
-                  .attr("x", 55)
-                  .attr("y", 465)
+                  .attr("x", 165)
+                  .attr("y", 510)
                   .attr("height", 2)
                   .attr("width", 15)
                   .attr("fill", "#ff9999")
-                svg2.append("text")
-                  .attr("x", 75)
-                  .attr("y", 470)
+                var stateName2 = svg2.append("text")
+                  .attr("x", 185)
+                  .attr("y", 515)
                   .attr("fill", "#ccc")
                   .style("font-size", 12)
                   .text("State Data")
                 svg2.append("rect")
-                  .attr("x", 150)
-                  .attr("y", 465)
+                  .attr("x", 55)
+                  .attr("y", 510)
                   .attr("height", 2)
                   .attr("width", 15)
                   .attr("fill", "#ccc")
                 svg2.append("text")
-                  .attr("x", 170)
-                  .attr("y", 470)
+                  .attr("x", 75)
+                  .attr("y", 515)
                   .attr("fill", "#ccc")
                   .style("font-size", 12)
-                  .text("Average")
+                  .text("U.S. Average")
 
                 // Graph 4
                 svg2.append("g")
                   .attr("class", "axisPop")
-                  .attr("transform", "translate("+svg2Padding+", 560)")
+                  .attr("transform", "translate("+svg2Padding+", 625)")
                   .call(d3.axisBottom(xScale2))
                 var yScale4 = d3.scaleLog().domain(averageAssets[0], averageAssets[averageAssets.length-1]).range([70,0]);
                 svg2.append("g")
                     .attr("id", "yAxis4")
                     .attr("class", "axisAssets")
-                    .attr("transform", "translate(55, 490)")
+                    .attr("transform", "translate(55, 555)")
                     .call(d3.axisLeft(yScale3)
                       .ticks(4)
                       .tickFormat(d3.format(".2s")));
                 svg2.append("text") // Label
                    .attr("transform", "rotate(-90)")
-                   .attr("x", -525)
+                   .attr("x", -590)
                    .attr("y", 15)
                    .style("text-anchor","middle")
                    .style("font-size", 12)
@@ -991,26 +977,13 @@
                   .attr("height", 70)
                   .attr("width", 1)
                   .attr("x", 55)
-                  .attr("y", 490)
+                  .attr("y", 555)
                   .attr("rx",4)
                   .attr("fill", "#a9a9a9")
                   .attr("id", "g4Handle")
 
 
-                  var stateName = svg2.append("text") // Legend
-                      .attr("x", 450)
-                      .attr("y", 100)
-                      .style("text-anchor","middle")
-                      .style("font-size", 12)
-                      .style("fill", "#ff9999")
-                      .text("");
-                  var stateName2 = svg2.append("text") // Legend
-                      .attr("x", 450)
-                      .attr("y", 370)
-                      .style("text-anchor","middle")
-                      .style("font-size", 12)
-                      .style("fill", "#ff9999")
-                      .text("");
+
                   var title = svg2.append("text")
                       .attr("id", "svg2_title")
                       .attr("x", 0)
@@ -1019,6 +992,7 @@
                       .style("font-weight", 700)
                       .style("font-family", "'Alfa Slab One', sans-serif")
                       .text("United States Average Data");
+
                 function zoomInfo(d){
                   popData = [];
                   var state = popIndexMap.get(d.id);
@@ -1055,7 +1029,7 @@
                   d3.select("path#populationLine")
                   .datum(popArray)
                   .attr("opacity", ".5")
-                  .attr("transform", "translate("+svg2Padding+", 360)")
+                  .attr("transform", "translate("+svg2Padding+", 405)")
                   .transition()
                     .attr("d", areaThisPopulation)
                     .duration(500);
@@ -1112,7 +1086,7 @@
                     .datum(acqArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#f2c830")
-                    .attr("transform", "translate(40, 230)")
+                    .attr("transform", "translate(40, 255)")
                     .transition()
                     .attr("d", acquisitionLine)
                     .duration(500);
@@ -1139,7 +1113,7 @@
                     .datum(payArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff7f00")
-                    .attr("transform", "translate(40, 230)")
+                    .attr("transform", "translate(40, 255)")
                     .transition()
                     .attr("d", payoutLine)
                     .duration(500);
@@ -1167,7 +1141,7 @@
                     .datum(transferArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#8f00ff")
-                    .attr("transform", "translate(40, 230)")
+                    .attr("transform", "translate(40, 255)")
                     .transition()
                     .attr("d", transferLine)
                     .duration(500);
@@ -1196,7 +1170,7 @@
                     .datum(managementArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff00ff")
-                    .attr("transform", "translate(40, 230)")
+                    .attr("transform", "translate(40, 255)")
                     .transition()
                     .attr("d", managementLine)
                     .duration(500);
@@ -1226,7 +1200,7 @@
                     .datum(privatizationArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff6666")
-                    .attr("transform", "translate(40, 230)")
+                    .attr("transform", "translate(40, 255)")
                     .transition()
                     .attr("d", privatizationLine)
                     .duration(500);
@@ -1275,15 +1249,15 @@
 
                 svg.select("#choro_title")
                   .text("Bank Failures in "+year);
-                svg2.select("#svg2_title")
-                  .text("Biggest Failure of "+year);
-                if (biggestFail == null) {
-                  svg2.select("#svg2_subtitle")
-                    .text("No failures");
-                } else {
-                  svg2.select("#svg2_subtitle")
-                    .text(biggestFail.name);
-                }
+//                svg2.select("#svg2_title")
+//                  .text("Biggest Failure of "+year);
+//                if (biggestFail == null) {
+//                  svg2.select("#svg2_subtitle")
+//                    .text("No failures");
+//                } else {
+//                  svg2.select("#svg2_subtitle")
+//                    .text(biggestFail.name);
+//                }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
                 var yearMax = Intl.NumberFormat().format(parseInt(yearMinMax[1]+"000"));
