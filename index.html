@@ -297,13 +297,11 @@
               legendGradient.setAttribute("y1", "0%");
               legendGradient.setAttribute("y2", "0%");
               document.getElementById("legendDefs").appendChild(legendGradient);
-
               var stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
               stop1.setAttribute("id", "stopGrey");
               stop1.setAttribute("offset", "20%");
               stop1.setAttribute("stop-color", "#cccccc");
               legendGradient.appendChild(stop1);
-
               var stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
               stop2.setAttribute("id", "stopPink");
               stop2.setAttribute("offset", "80%");
@@ -378,7 +376,7 @@
                   .extent([[-98 - 45, 38 - 45], [-98 + 45, 38 + 45]])
                   .step([5, 5]);
 
-             
+
 
               function showMap(year) {
                 var yearMinMax = yearAssets(timeData, year);
@@ -417,13 +415,15 @@
                     })
                     .attr("d", path)
                     .on('click', function(d){
-                        if (selectedState!= null){
-                            selectedState.style("stroke", "#D3D3D3")
-                                .style("stroke-width", "1px");
+                        if (selectedState != null){
+                            selectedState.style("stroke", "none")
                         }
-                        d3.select(this).style("stroke", "#A9A9A9")
-                            .style("stroke-width", "3px");
+                        d3.select(this.parentNode.appendChild(this)) // Makes state outlines more uniform
+                          .style('stroke-opacity', 1)
+                          .style('stroke', '#F00');
                         selectedState = d3.select(this);
+                        selectedState.style("stroke", "#808080")
+                            .style("stroke-width", "1px");
                         zoomInfo(d);
                     });
 
@@ -510,8 +510,8 @@
                       id.text(popArray);
 
                       var yScale2 = d3.scaleLog().domain(popArray[0], popArray[popArray.length-1]).range([100,0]);
-                      
-                        
+
+
                         var yAxis2 = d3.axisLeft(yScale2);
                           var plotYAxis2 = svg2.append("g")
                           .attr("id", "yAxis2")
@@ -519,7 +519,7 @@
                         .attr("class", "axisPop")
                         .call(yAxis2);
 
-                        
+
                       //var popArray = popData;
                       //id.text(popArray);
                       var area = d3.area()
@@ -527,7 +527,7 @@
                         .y1(function(d) { return yScale2(popData[d]) })
                         .y0(99)
                       //
-                      
+
 
                   }
 
@@ -621,7 +621,7 @@
 
 
 
-                
+
 
               showMap(currentYear);
 
