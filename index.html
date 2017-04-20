@@ -517,6 +517,15 @@
                     .attr("stroke", "black")
                     .attr("transform", "translate(19, 100)");
 
+                    svg2.append("path")
+                    .datum(averageAssets)
+                    .attr("id", "assetLine")
+                    .attr("fill", "#ff0000")
+                    .attr("d", areaAverageAsset)
+                    .attr("opacity", ".01")
+                    .attr("stroke", "black")
+                    .attr("transform", "translate(19, 100)");
+
                   // Graph 2
                   svg2.append("g")
                     .attr("class", "axisPop")
@@ -595,7 +604,7 @@
                   if (stateid<10){stateid = '0' + stateid;}
                   stateid = 's'+stateid;
                   var stateArray = stat[stateid];
-                  //console.log(stateArray);
+                  console.log(stateArray);
                  // console.log(stateArray);
                   var popArray = popData;
                   var popArrayExtent = d3.extent(popArray);
@@ -622,6 +631,30 @@
                 //    .attr("d", areaThisPopulation)
                 //    .attr("stroke", "black")
                 //    .attr("transform", "translate(19, 360)");
+
+                var assetArray = []
+                var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);  
+               for (var key in stateArray) {
+                if(!isNaN(stateArray[key])){
+                  assetArray.push(stateArray[key].numAssets);
+                }
+                else {assetArray.push(0)}
+                }
+                var assetArrayExtent = d3.extent(assetArray);
+                var yScaleAsset = d3.scaleLinear().domain(assetArrayExtent).range([70,0]);
+                //console.log(assetArray);
+               var areaThisStateAsset = d3.area()
+                    .x(function(d) { return xScale2(scaleThisAssetIndex(assetArray.indexOf(d))) })
+                    .y1(function(d) {  return yScaleAsset(d) })
+                    .y0(70)
+
+                d3.select("path#assetLine")
+                   .datum(assetArray)
+                   .attr("fill", "#ff0000")
+                   .attr("opacity", ".4")
+                   .attr("d", areaThisStateAsset)
+                   .attr("stroke", "black")
+                   .attr("transform", "translate(19, 100)");
                 }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
