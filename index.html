@@ -488,15 +488,9 @@
 
                   var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
                   var svg2Padding = 22;
-
-                  var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
-                  var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
-                  var svg2Padding = 10;
-
                   var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
                   var scalePopulationIndex = d3.scaleLinear().domain([0,averagePopulation.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   var scaleAssetIndex = d3.scaleLinear().domain([0,averageAssets.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-
                   var yScale2AveragePop = d3.scaleLinear().domain(populationExtent).range([100,0]);
 
                   // Graph 1
@@ -549,7 +543,8 @@
                 svg2.append("g")
                   .attr("transform", "translate(40, 360)")
                   .attr("id", "yAxis3")
-                  .call(d3.axisLeft(yScale2AveragePop));
+                  .call(d3.axisLeft(yScale2AveragePop)
+                    .tickFormat(d3.format(".2s")));
                 var areaAveragePop = d3.area()
                   .x(function(d) { return xScale2(scalePopulationIndex(averagePopulation.indexOf(d))) })
                   .y1(function(d) { return yScale2AveragePop(d) })
