@@ -532,6 +532,8 @@
                       averageAcq[num]/=51;
                   }
 
+                  
+
                   //get the average Payouts
                   var averagePayout = [];
                   for(var num = 0; num < 90; num++){
@@ -552,7 +554,29 @@
                       }
                   }
                   for(var num = 0; num < 90; num++){
-                      averageAcq[num]/=51;
+                      averagePayout[num]/=51;
+                  }
+                  //get the average Transfers
+                  var averageTransfer = [];
+                  for(var num = 0; num < 90; num++){
+                      averageTransfer[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].TRANSFER)) {
+                              averageTransfer[year] += stateData[year].TRANSFER;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageTransfer[num]/=51;
                   }
 
                   //get an average of the populations for each year
@@ -695,6 +719,20 @@
                     .attr("id", "payoutLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", payoutLine)
+                    .attr("transform", "translate(40, 230)");
+
+                     var transferExtent = d3.extent(averageTransfer);
+                    var yScale2TransferAvg = d3.scaleLinear().domain(transferExtent).range([70,0]);
+                    var countie3 = 0;
+                    var transferLine = d3.area()
+                    .x(function(d) { countie3++; return xScale2(scaleAssetIndex(countie3-1)) })
+                    .y1(function(d) { return yScale2TransferAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averageTransfer)
+                    .attr("id", "transferLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", transferLine)
                     .attr("transform", "translate(40, 230)");
 
                      
@@ -880,9 +918,9 @@
                     var payoutExtent = d3.extent(payArray);
                     var yScale2Payout = d3.scaleLinear().domain(payoutExtent).range([70,0]);
                     var scaleThisPayoutIndex = d3.scaleLinear().domain([0,payArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                   var count = -1
+                   var count2 = -1
                     var payoutLine = d3.area()
-                    .x(function(d) { count++; return xScale2(scaleThisPayoutIndex(count-1)) })
+                    .x(function(d) { count2++; return xScale2(scaleThisPayoutIndex(count2-1)) })
                     .y1(function(d) { return yScale2Payout(d) })
                     .y0(70)
                     
@@ -893,6 +931,34 @@
                     .attr("transform", "translate(40, 230)")
                     .transition()
                     .attr("d", payoutLine)
+                    .duration(500);
+
+                    //plot transfers
+                    var transferArray = []
+                for(var num = 0; num < 90; num++){
+                      transferArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].TRANSFER)) {
+                              transferArray[year] += stateArray[year].TRANSFER;
+                          }
+                      }
+                    var transferExtent = d3.extent(transferArray);
+                    var yScale2Transfer = d3.scaleLinear().domain(transferExtent).range([70,0]);
+                    var scaleThisTransferIndex = d3.scaleLinear().domain([0,transferArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                   var count3 = -1
+                    var transferLine = d3.area()
+                    .x(function(d) { count3++; return xScale2(scaleThisTransferIndex(count3-1)) })
+                    .y1(function(d) { return yScale2Transfer(d) })
+                    .y0(70)
+                    
+                    d3.select("path#transferLine")
+                    .datum(transferArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#8f00ff")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", transferLine)
                     .duration(500);
 
                 }
