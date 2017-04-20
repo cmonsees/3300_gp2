@@ -240,10 +240,15 @@
               // Set up document
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
+<<<<<<< HEAD
               var height = 650;
+=======
+           ;   var height = 600;
+>>>>>>> 7501f7f26b5098a896e492f4211c422ec0c15c13
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
+              var paddingWidth = document.getElementsByTagName("div")[0].offsetLeft;
 
               svg.append("text")
                 .attr("id", "choro_title")
@@ -523,8 +528,10 @@
                    //console.log(newYear);
                    //console.log(d3.event.x);
                   assetsHandle.attr("x", yearScale.invert(newYear));
+                  
                   if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
                               //assetsHandle.attr("x", d3.event.x-4);
+                              assetsHandle.attr("x", yearScale.invert(newYear));
                               currentYear = newYear;
                               updateMap(newYear);
                             }
@@ -533,8 +540,10 @@
                         .on("start drag", function() {
                             var newYear = parseInt(yearScale(d3.event.x));
                             assetsHandle.attr("x", d3.event.x);
+                            
 
                             if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
+                              assetsHandle.attr("x", d3.event.x);
                               currentYear = newYear;
                               updateMap(newYear);
                             }
