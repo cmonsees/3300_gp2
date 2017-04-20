@@ -494,6 +494,7 @@
 
                   function zoomInfo(d){
                       popData = [];
+                      d3.select("#yAxis2").remove();
                       var state = popIndexMap.get(d.id);
                       //grab the population data of the clicked state
                       for(var i = 1930; i <= 2010; i= i + 10){
@@ -507,23 +508,27 @@
 
                      // console.log(stateArray);
                       var popArray = popData;
-                      //id.text(popArray);
+                      id.text(popArray);
 
-                      var yScale2 = d3.scaleLog().domain(popData[0], popData[popData.length-1]).range([100,0]);
+                      var yScale2 = d3.scaleLog().domain(popArray[0], popArray[popArray.length-1]).range([100,0]);
                       
-                        var ticksY2 = yScale2.ticks(51);
-                        var tickFormatY2 = yScale2.tickFormat(51);
-                      ticksY2.map(tickFormatY2);
+                        
                         var yAxis2 = d3.axisLeft(yScale2);
                           var plotYAxis2 = svg2.append("g")
+                          .attr("id", "yAxis2")
+                          .attr("transform", "translate(4,"+(height/2 - 100)+")")
                         .attr("class", "axisPop")
-                        .attr("transform", "translate(4,"+(height-48)+")")
                         .call(yAxis2);
 
                         
-                      var popArray = popData;
-                      id.text(popArray);
+                      //var popArray = popData;
+                      //id.text(popArray);
+                      var area = d3.area()
+                        .x(function(d) { return xScale2(new Date(d.year, 0, 1)) })
+                        .y1(function(d) { return yScale2(popData[d]) })
+                        .y0(99)
                       //
+                      
 
                   }
 
@@ -612,7 +617,7 @@
               var xAxis2 = d3.axisBottom(xScale2);
                   var plotXAxis2 = svg2.append("g")
                 .attr("class", "axisPop")
-                .attr("transform", "translate(4,"+(height-48)+")")
+                .attr("transform", "translate(4,"+(height/2)+")")
                 .call(xAxis2);
 
 
