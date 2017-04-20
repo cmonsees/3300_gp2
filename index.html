@@ -556,6 +556,17 @@
                   .attr("d", areaAveragePop)
                   .attr("transform", "translate(19, 360)");
 
+                  svg2.append("path")
+                    .datum(averagePopulation)
+                    .attr("id", "populationLine")
+                    .attr("fill", "#ff0000")
+                    .attr("opacity", ".01")
+                    .attr("d", areaAveragePop)
+                    .attr("stroke", "black")
+                    .attr("transform", "translate(19, 360)")
+                    .transition()
+                    .duration(500);
+
                 // Graph 4
                 svg2.append("g")
                   .attr("class", "axisPop")
@@ -573,6 +584,8 @@
                   popData = [];
                   //d3.select("#yAxis2").remove();
                   var state = popIndexMap.get(d.id);
+                  
+                  //console.log(populationLine);
                   //grab the population data of the clicked state
                   for(var i = 1930; i <= 2010; i= i + 10){
                       year = String(i);
@@ -595,13 +608,20 @@
                     .y1(function(d) { return yScale2Pop(d) })
                     .y0(70)
 
-                  svg2.append("path")
+                    d3.select("path#populationLine")
                     .datum(popArray)
                     .attr("fill", "#ff0000")
                     .attr("opacity", ".4")
                     .attr("d", areaThisPopulation)
                     .attr("stroke", "black")
                     .attr("transform", "translate(19, 360)");
+
+                   //d3.select("path#populationLine").transition()
+                 // .duration(500)
+                 // .attr("datum", popArray)
+                //    .attr("d", areaThisPopulation)
+                //    .attr("stroke", "black")
+                //    .attr("transform", "translate(19, 360)");
                 }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
