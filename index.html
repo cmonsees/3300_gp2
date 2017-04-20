@@ -620,14 +620,15 @@
                     .call(d3.axisBottom(xScale2))
                   var yScale2AcqAvg = d3.scaleLinear().domain(acquisitionExtent).range([70,0]);
                   svg2.append("g")
+
                     .attr("transform", "translate(40, 230)")
                     .attr("id", "yAxisAcq")
                     .call(d3.axisLeft(yScale2AcqAvg)
-                        .tickFormat(d3.format(".2s")));
+                        .tickFormat(d3.format(".2s")))
                     .attr("transform", "translate(55, 230)")
                     .attr("class", "axisAssets")
                     .attr("id", "yAxis2")
-                    .call(d3.axisLeft(yScale2Average)
+                    .call(d3.axisLeft(yScale2AcqAvg)
                       .ticks(4)
                       .tickFormat(d3.format(".2s")));
                   svg2.append("text") // Label
@@ -638,7 +639,6 @@
                      .style("font-size", 12)
                      .style("fill", "#cccccc")
                      .text("Graph 2");
-
                   var g2Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
