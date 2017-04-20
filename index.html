@@ -379,6 +379,8 @@
                   .extent([[-98 - 45, 38 - 45], [-98 + 45, 38 + 45]])
                   .step([5, 5]);
 
+             
+
               function showMap(year) {
                 var yearMinMax = yearAssets(timeData, year);
                 var cScale = d3.scaleLinear().domain(yearMinMax).range([0,1]);
@@ -440,12 +442,15 @@
 
                   });
 
+
                   //get an average of the assets for each year;
+
+                //get an average of the values for each object;
+
                   var averageAssets = [];
                   for(var num = 0; num < 90; num++){
                       averageAssets[num] = 0;
                   }
-
                   for(var s = 1; s < 57; s++) {
                       var state = '';
                       state = s;
@@ -456,7 +461,6 @@
                       var stateData = stat[state];
                       for(year = 0; year < 90; year++){
                           if(!isNaN(stateData[year].numAssets)) {
-
                               averageAssets[year] += stateData[year].numAssets;
                           }
                       }
@@ -487,6 +491,7 @@
                   }
 
 
+
                   function zoomInfo(d){
                       popData = [];
                       var state = popIndexMap.get(d.id);
@@ -499,9 +504,27 @@
                       if (stateid<10){stateid = '0' + stateid;}
                       stateid = 's'+stateid;
                       var stateArray = stat[stateid];
+
+                     // console.log(stateArray);
+                      var popArray = popData;
+                      //id.text(popArray);
+
+                      var yScale2 = d3.scaleLog().domain(popData[0], popData[popData.length-1]).range([100,0]);
+                      
+                        var ticksY2 = yScale2.ticks(51);
+                        var tickFormatY2 = yScale2.tickFormat(51);
+                      ticksY2.map(tickFormatY2);
+                        var yAxis2 = d3.axisLeft(yScale2);
+                          var plotYAxis2 = svg2.append("g")
+                        .attr("class", "axisPop")
+                        .attr("transform", "translate(4,"+(height-48)+")")
+                        .call(yAxis2);
+
+                        
                       var popArray = popData;
                       id.text(popArray);
                       //
+
                   }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
@@ -578,6 +601,23 @@
                     .text("");
                 }
               }
+
+
+               var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
+              var svg2Padding = 10;
+              var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
+              var ticksX2 = xScale2.ticks(51);
+              var tickFormatX2 = xScale2.tickFormat(51);
+              ticksX2.map(tickFormatX2);
+              var xAxis2 = d3.axisBottom(xScale2);
+                  var plotXAxis2 = svg2.append("g")
+                .attr("class", "axisPop")
+                .attr("transform", "translate(4,"+(height-48)+")")
+                .call(xAxis2);
+
+
+
+                
 
               showMap(currentYear);
 
