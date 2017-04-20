@@ -509,6 +509,29 @@
                       averageAssets[num]/=51;
                   }
 
+                  //get the average aquisitions
+                  var averageAcq = [];
+                  for(var num = 0; num < 90; num++){
+                      averageAcq[num] = 0;
+                  }
+                  for(var s = 1; s < 57; s++) {
+                      var state = '';
+                      state = s;
+                      if(s<10){
+                        state = '0' + s;
+                      }
+                      state = 's' + state;
+                      var stateData = stat[state];
+                      for(year = 0; year < 90; year++){
+                          if(!isNaN(stateData[year].ACQUISITION)) {
+                              averageAcq[year] += stateData[year].ACQUISITION;
+                          }
+                      }
+                  }
+                  for(var num = 0; num < 90; num++){
+                      averageAcq[num]/=51;
+                  }
+
                   //get an average of the populations for each year
                   var averagePopulation = [];
                   for(var y = 0; y <9; y++){
@@ -581,15 +604,16 @@
                     .attr("id", "g1Handle")
 
                   // Graph 2
+                  var acquisitionExtent = d3.extent(averageAcq);
                   svg2.append("g")
                     .attr("class", "axisPop")
                     .attr("transform", "translate(18, 300)")
                     .call(d3.axisBottom(xScale2))
-                  var yScale2Average = d3.scaleLinear().domain(populationExtentAvg).range([70,0]);
+                  var yScale2AcqAvg = d3.scaleLinear().domain(acquisitionExtent).range([70,0]);
                   svg2.append("g")
                     .attr("transform", "translate(40, 230)")
-                    .attr("id", "yAxis2")
-                    .call(d3.axisLeft(yScale2Average)
+                    .attr("id", "yAxisAcq")
+                    .call(d3.axisLeft(yScale2AcqAvg)
                         .tickFormat(d3.format(".2s")));
                   var g2Handle = svg2.insert("rect")
                     .attr("height", 70)
@@ -599,6 +623,21 @@
                     .attr("rx",4)
                     .attr("fill", "#000")
                     .attr("id", "g2Handle")
+
+                    var countie = 0;
+                    var acquisitionLine = d3.area()
+                    .x(function(d) { countie++; return xScale2(scaleAssetIndex(countie-1)) })
+                    .y1(function(d) { return yScale2AcqAvg(d) })
+                    .y0(70)
+                    svg2.append("path")
+                    .datum(averageAcq)
+                    .attr("id", "acquisitionLine")
+                    .attr("fill-opacity", ".01")
+                    .attr("d", acquisitionLine)
+                    .attr("transform", "translate(40, 230)");
+
+                     
+
 
                 // Graph 3
                 svg2.append("g")
@@ -673,6 +712,7 @@
                   //Population Graph
                   var stateArray = stat[stateid];
                   var popArray = popData;
+                  console.log(stateArray);
                   //var popArrayExtent = populationMinMax(popArray);
                   //var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   //var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([70,0]);
@@ -683,6 +723,7 @@
                     .x(function(d) { return xScale2(scalePopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
                     .y0(70)
+
                   d3.select("path#populationLine")
                   .datum(popArray)
                   .attr("opacity", ".5")
@@ -717,6 +758,37 @@
                   .transition()
                     .attr("d", areaThisStateAsset)
                     .duration(500);
+
+
+                    //graph2? Acquisitions 
+
+                     var acqArray = []
+                for(var num = 0; num < 90; num++){
+                      acqArray[num] = 0;
+                  }
+                  for(year = 0; year < 90; year++){
+                          if(!isNaN(stateArray[year].ACQUISITION)) {
+                              acqArray[year] += stateArray[year].ACQUISITION;
+                          }
+                      }
+                    var acquisitionExtent = d3.extent(acqArray);
+                    var yScale2Acq = d3.scaleLinear().domain(acquisitionExtent).range([70,0]);
+                    var scaleThisAcquisitionIndex = d3.scaleLinear().domain([0,acqArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                   var count = -1
+                    var acquisitionLine = d3.area()
+                    .x(function(d) { count++; return xScale2(scaleThisAcquisitionIndex(count-1)) })
+                    .y1(function(d) { return yScale2Acq(d) })
+                    .y0(70)
+                    
+                    d3.select("path#acquisitionLine")
+                    .datum(acqArray)
+                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff9999")
+                    .attr("transform", "translate(40, 230)")
+                    .transition()
+                    .attr("d", acquisitionLine)
+                    .duration(500);
+
                 }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
