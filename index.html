@@ -591,10 +591,7 @@
 
                 function zoomInfo(d){
                   popData = [];
-                  //d3.select("#yAxis2").remove();
                   var state = popIndexMap.get(d.id);
-                  
-                  //console.log(populationLine);
                   //grab the population data of the clicked state
                   for(var i = 1930; i <= 2010; i= i + 10){
                       year = String(i);
@@ -603,20 +600,17 @@
                   stateid = d.id;
                   if (stateid<10){stateid = '0' + stateid;}
                   stateid = 's'+stateid;
+                  //Population Graph
                   var stateArray = stat[stateid];
-                  console.log(stateArray);
-                 // console.log(stateArray);
                   var popArray = popData;
                   var popArrayExtent = d3.extent(popArray);
-                  //id.text(popArray);
-                   var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                   var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([100,0]);
+                  var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([100,0]);
 
                   var areaThisPopulation = d3.area()
                     .x(function(d) { return xScale2(scaleThisPopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
                     .y0(70)
-
                     d3.select("path#populationLine")
                     .datum(popArray)
                     .attr("fill", "#ff0000")
@@ -624,14 +618,7 @@
                     .attr("d", areaThisPopulation)
                     .attr("stroke", "black")
                     .attr("transform", "translate(19, 360)");
-
-                   //d3.select("path#populationLine").transition()
-                 // .duration(500)
-                 // .attr("datum", popArray)
-                //    .attr("d", areaThisPopulation)
-                //    .attr("stroke", "black")
-                //    .attr("transform", "translate(19, 360)");
-
+                    //AssetGraph
                 var assetArray = []
                 var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);  
                for (var key in stateArray) {
