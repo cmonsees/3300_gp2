@@ -126,6 +126,19 @@
         function formatPop(arrayPop, data){
             arrayPop.push(data);
         }
+        function populationMinMax(popArray){
+          var max = parseInt(popArray[0]);
+          var min = parseInt(popArray[0]);
+          for (var t= 0; t< popArray.length; t++) {
+            if (parseInt(popArray[t]) > max) { max = parseInt(popArray[t]); }
+            if (parseInt(popArray[t]) < min) { min = parseInt(popArray[t]); }
+            //console.log(min);
+             //console.log(max);
+          }
+          return ([min, max]);
+        }
+
+        
 
         function formatData(arrayBanks, data) {
           // Set up bank array
@@ -603,10 +616,12 @@
                   //Population Graph
                   var stateArray = stat[stateid];
                   var popArray = popData;
-                  var popArrayExtent = d3.extent(popArray);
+                  var popArrayExtent = populationMinMax(popArray);
                   //var scaleThisPopulationIndex = d3.scaleLinear().domain([0,popArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   var yScale2Pop = d3.scaleLinear().domain(popArrayExtent).range([70,0]);
 
+                 console.log(popArrayExtent);
+                  console.log(popArray)
                   var areaThisPopulation = d3.area()
                     .x(function(d) { return xScale2(scalePopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
