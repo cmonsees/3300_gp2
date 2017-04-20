@@ -15,6 +15,23 @@ body {
   stroke: #cccccc;
 }
 
+.axisPop line, .axisPop path {
+  stroke: #cccccc;
+}
+
+.axisPop text {
+  fill: #cccccc;
+}
+
+
+.axisAssets line, .axisAssets path {
+  stroke: #cccccc;
+}
+
+.axisAssets text {
+  fill: #cccccc;
+}
+
 .col1 {
   width: 60%;
   display: inline;

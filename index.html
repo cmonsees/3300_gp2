@@ -536,8 +536,8 @@
                   var assetExtent = d3.extent(averageAssets);
 
                   var yearScale2 = d3.scaleLinear().domain([0,svg2_width-4]).range([1934,2016]);
-                  var svg2Padding = 22;
-                  var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding]);
+                  var svg2Padding = 27;
+                  var xScale2 = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([svg2Padding,svg2_width-svg2Padding-1]);
                   var scalePopulationIndex = d3.scaleLinear().domain([0,averagePopulation.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   var scaleAssetIndex = d3.scaleLinear().domain([0,averageAssets.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
                   var yScale2Pop = d3.scaleLinear().domain(populationExtent).range([70,0]);
@@ -545,15 +545,16 @@
                   // Graph 1 Assets
                   svg2.append("g")
                     .attr("class", "axisPop")
-                    .attr("transform", "translate(18, 170)")
+                    .attr("transform", "translate("+svg2Padding+", 170)")
                     .call(d3.axisBottom(xScale2))
                   var yScale3 = d3.scaleLinear().domain(assetExtent).range([70,0]);
                   svg2.append("g")
-                    .attr("transform", "translate(40, 100)")
+                    .attr("transform", "translate(55, 100)")
                     .attr("id", "yAxis1")
                     .attr("class", "axisAssets")
                     .call(d3.axisLeft(yScale3)
-                        .tickFormat(d3.format(".2s")));
+                      .ticks(4)
+                      .tickFormat(d3.format(".2s")));
                   var areaAverageAsset = d3.area()
                     .x(function(d) { return xScale2(scaleAssetIndex(averageAssets.indexOf(d))) })
                     .y1(function(d) { return yScale3(d) })
@@ -563,53 +564,73 @@
                     .attr("fill", "#d9d9d9")
                     .attr("d", areaAverageAsset)
                     .attr("opacity", "1")
-                    .attr("transform", "translate(19, 100)");
+                    .attr("transform", "translate("+svg2Padding+", 100)");
                   svg2.append("path") // State-specific line
                     .datum(averageAssets)
                     .attr("id", "assetLine")
                     .attr("fill", "#ff9999")
                     .attr("d", areaAverageAsset)
                     .attr("opacity", "0")
-                    .attr("transform", "translate(19, 100)")
+                    .attr("transform", "translate("+svg2Padding+", 100)")
+                  svg2.append("text") // Label
+                     .attr("transform", "rotate(-90)")
+                     .attr("x", -135)
+                     .attr("y", 15)
+                     .style("text-anchor","middle")
+                     .style("font-size", 12)
+                     .style("fill", "#cccccc")
+                     .text("Assets Lost");
                   var g1Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
-                    .attr("x", 40)
+                    .attr("x", 55)
                     .attr("y", 100)
                     .attr("rx",4)
-                    .attr("fill", "#000")
+                    .attr("fill", "#a9a9a9")
                     .attr("id", "g1Handle")
 
                   // Graph 2
                   svg2.append("g")
                     .attr("class", "axisPop")
-                    .attr("transform", "translate(18, 300)")
+                    .attr("transform", "translate("+svg2Padding+", 300)")
                     .call(d3.axisBottom(xScale2))
                   var yScale2Average = d3.scaleLinear().domain(populationExtentAvg).range([70,0]);
                   svg2.append("g")
-                    .attr("transform", "translate(40, 230)")
+                    .attr("transform", "translate(55, 230)")
+                    .attr("class", "axisAssets")
                     .attr("id", "yAxis2")
                     .call(d3.axisLeft(yScale2Average)
-                        .tickFormat(d3.format(".2s")));
+                      .ticks(4)
+                      .tickFormat(d3.format(".2s")));
+                  svg2.append("text") // Label
+                     .attr("transform", "rotate(-90)")
+                     .attr("x", -265)
+                     .attr("y", 15)
+                     .style("text-anchor","middle")
+                     .style("font-size", 12)
+                     .style("fill", "#cccccc")
+                     .text("Graph 2");
                   var g2Handle = svg2.insert("rect")
                     .attr("height", 70)
                     .attr("width", 1)
-                    .attr("x", 40)
+                    .attr("x", 55)
                     .attr("y", 230)
                     .attr("rx",4)
-                    .attr("fill", "#000")
+                    .attr("fill", "#a9a9a9")
                     .attr("id", "g2Handle")
 
                 // Graph 3
                 svg2.append("g")
                   .attr("class", "axisPop")
-                  .attr("transform", "translate(18, 430)")
+                  .attr("transform", "translate("+svg2Padding+", 430)")
                   .call(d3.axisBottom(xScale2))
                 var yScale2AveragePop = d3.scaleLinear().domain(populationExtent).range([70,0]);
                 svg2.append("g")
-                  .attr("transform", "translate(40, 360)")
+                  .attr("transform", "translate(55, 360)")
                   .attr("id", "yAxis3")
+                  .attr("class", "axisAssets")
                   .call(d3.axisLeft(yScale2Pop)
+                    .ticks(4)
                     .tickFormat(d3.format(".2s")));
                 var areaAveragePop = d3.area()
                   .x(function(d) { return xScale2(scalePopulationIndex(averagePopulation.indexOf(d))) })
@@ -621,42 +642,59 @@
                   .attr("fill", "#d9d9d9")
                   .attr("opacity", "1")
                   .attr("d", areaAveragePop)
-                  .attr("transform", "translate(19, 360)")
+                  .attr("transform", "translate("+svg2Padding+", 360)")
                 svg2.append("path") // state population
                   .datum(averagePopulation)
                   .attr("id", "populationLine")
                   .attr("fill", "#ff9999")
                   .attr("opacity", ".01")
                   .attr("d", areaAveragePop)
-                  .attr("transform", "translate(19, 360)")
+                  .attr("transform", "translate("+svg2Padding+", 360)")
+                svg2.append("text") // Label
+                   .attr("transform", "rotate(-90)")
+                   .attr("x", -395)
+                   .attr("y", 15)
+                   .style("text-anchor","middle")
+                   .style("font-size", 12)
+                   .style("fill", "#cccccc")
+                   .text("Population");
                 var g3Handle = svg2.insert("rect")
                   .attr("height", 70)
                   .attr("width", 1)
-                  .attr("x", 40)
+                  .attr("x", 55)
                   .attr("y", 360)
                   .attr("rx",4)
-                  .attr("fill", "#000")
+                  .attr("fill", "#a9a9a9")
                   .attr("id", "g3Handle")
 
                 // Graph 4
                 svg2.append("g")
                   .attr("class", "axisPop")
-                  .attr("transform", "translate(18, 560)")
+                  .attr("transform", "translate("+svg2Padding+", 560)")
                   .call(d3.axisBottom(xScale2))
                 var yScale4 = d3.scaleLog().domain(averageAssets[0], averageAssets[averageAssets.length-1]).range([70,0]);
                 svg2.append("g")
                     .attr("id", "yAxis4")
                     .attr("class", "axisAssets")
-                    .attr("transform", "translate(40, 490)")
+                    .attr("transform", "translate(55, 490)")
                     .call(d3.axisLeft(yScale3)
-                        .tickFormat(d3.format(".2s")));
+                      .ticks(4)
+                      .tickFormat(d3.format(".2s")));
+                svg2.append("text") // Label
+                   .attr("transform", "rotate(-90)")
+                   .attr("x", -525)
+                   .attr("y", 15)
+                   .style("text-anchor","middle")
+                   .style("font-size", 12)
+                   .style("fill", "#cccccc")
+                   .text("Graph 4");
                 var g4Handle = svg2.insert("rect")
                   .attr("height", 70)
                   .attr("width", 1)
-                  .attr("x", 40)
+                  .attr("x", 55)
                   .attr("y", 490)
                   .attr("rx",4)
-                  .attr("fill", "#000")
+                  .attr("fill", "#a9a9a9")
                   .attr("id", "g4Handle")
 
                 function zoomInfo(d){
@@ -686,7 +724,7 @@
                   d3.select("path#populationLine")
                   .datum(popArray)
                   .attr("opacity", ".5")
-                  .attr("transform", "translate(19, 360)")
+                  .attr("transform", "translate("+svg2Padding+", 360)")
                   .transition()
                     .attr("d", areaThisPopulation)
                     .duration(500);
@@ -713,7 +751,7 @@
                   .datum(assetArray)
                   .attr("fill", "#ff9999")
                   .attr("opacity", ".5")
-                  .attr("transform", "translate(19, 100)")
+                  .attr("transform", "translate("+svg2Padding+", 100)")
                   .transition()
                     .attr("d", areaThisStateAsset)
                     .duration(500);
