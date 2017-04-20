@@ -42,7 +42,7 @@
         </h2>
       </div>
 
-      <div id='viz' style='margin-bottom:65px'></div>
+      <div id='viz' style='margin-bottom:35px'></div>
 
       <div class='col1' style='width:35%;'>
         <h2 id='crisis_subtitle'>
@@ -51,7 +51,7 @@
       </div>
 
       <div class='col2' style='width:60%;'>
-        <h2 style='color: #000; text-align: left; font-size: 22px; margin-bottom:5px' id='crisis_title'>Great Depression</h2>
+        <h2 style='color: #000; text-align: left; font-size: 22px; margin-bottom:5px; letter-spacing:0' id='crisis_title'>Great Depression</h2>
         <div class='text_col'>
           <p id='crisis_text'>
             The Great Depression was the deepest and longest-lasting economic downturn
@@ -262,10 +262,11 @@
               // Set up document
               var viz = document.getElementById("viz");
               var svg = d3.select(viz).append("svg");
-              var height = 600;
+              var height = 640;
               svg.attr("width","60%")
                  .attr("height",height);
               var width = document.getElementsByTagName("svg")[0].getClientRects()[0].width;
+              var paddingWidth = document.getElementsByTagName("div")[0].offsetLeft;
 
               svg.append("text")
                 .attr("id", "choro_title")
@@ -278,11 +279,12 @@
 
               svg.append("text")
                 .attr("id", "choro_subtitle")
-                .attr("x", 0)
-                .attr("y", 50)
-                .style("font-size", "18px")
-                .style("font-weight", 400)
-                .style("fill", d3.hsl(0, 1, .65))
+                .attr("x", 280)
+                .attr("y", 23)
+                .style("font-size", "22px")
+                .style("font-weight", 700)
+                .style("font-family", "'Alfa Slab One', sans-serif")
+                .style("fill", d3.hsl(0, 1, .75))
                 .text("Great Depression");
 
               // Legend setup
@@ -322,15 +324,22 @@
                 .attr("x", 0)
                 .attr("y", 57)
                 .style("font-size", "12px")
-                .text("-$10000");
+                .text("-$–");
 
               svg.append("text")
                 .attr("id", "legendMax")
-                .attr("x", 200)
+                .attr("x", 265)
                 .attr("y", 57)
                 .attr("text-anchor", "end")
                 .style("font-size", "12px")
-                .text("-$10000");
+                .text("-$–");
+
+                svg.append("text")
+                  .attr("x", 7)
+                  .attr("y", height-10)
+                  .style("font-size", "12px")
+                  .style("fill", "#cccccc")
+                  .text("Assets lost (log scale)");
 
               // End legend setup
 
@@ -362,7 +371,7 @@
               var us = data[1];
               var projection = d3.geoAlbersUsa()
                   .scale(900)
-                  .translate([width / 2, height / 2])
+                  .translate([width / 2, (height / 2)-5])
                   .precision(.1);
               var path = d3.geoPath()
                   .projection(projection);
@@ -444,8 +453,8 @@
                       //
                   }
 
-                var yearMin = parseInt(yearMinMax[0]+"000");
-                var yearMax = parseInt(yearMinMax[1]+"000");
+                var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
+                var yearMax = Intl.NumberFormat().format(parseInt(yearMinMax[1]+"000"));
                 svg.select("#legendMin")
                   .text("-$"+yearMin)
                 svg.select("#legendMax")
@@ -494,8 +503,8 @@
                     .text(biggestFail.name);
                 }
 
-                var yearMin = parseInt(yearMinMax[0]+"000");
-                var yearMax = parseInt(yearMinMax[1]+"000");
+                var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
+                var yearMax = Intl.NumberFormat().format(parseInt(yearMinMax[1]+"000"));
                 svg.select("#legendMin")
                   .text("-$"+yearMin)
                 svg.select("#legendMax")
@@ -522,7 +531,7 @@
               showMap(currentYear);
 
               // Create slider
-              var yearScale = d3.scaleLinear().domain([0,width]).range([1934,2016]); // converts pixel-coordinates to years
+              var yearScale = d3.scaleLinear().domain([0,width-4]).range([1934,2016]); // converts pixel-coordinates to years
 
               var xScale = d3.scaleTime().domain([new Date(1934,0,1),new Date(2016,0,1)]).range([4,width-8]); // converts years to pixel coordinates
               var ticks = xScale.ticks(51);
@@ -532,7 +541,7 @@
                 .ticks(20)
               var plotXAxis = svg.append("g")
                 .attr("class", "axis")
-                .attr("transform", "translate(4,"+(height-18)+")")
+                .attr("transform", "translate(4,"+(height-48)+")")
                 .call(xAxis);
 
               var assets = assetsMinMax(timeData);
@@ -544,7 +553,7 @@
                 .y0(39)
 
               var assetsSlider = svg.append("g")
-                .attr("transform", "translate(0,"+(height-57)+")")
+                .attr("transform", "translate(0,"+(height-87)+")")
                 .attr("id", "sliderPath")
                 .on("click", function(){
                   //When the slider is clicked the handler moves and updates the slider
@@ -552,8 +561,9 @@
                    //console.log(newYear);
                    //console.log(d3.event.x);
                   assetsHandle.attr("x", yearScale.invert(newYear));
+
                   if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
-                              //assetsHandle.attr("x", d3.event.x-4);
+                              assetsHandle.attr("x", yearScale.invert(newYear));
                               currentYear = newYear;
                               updateMap(newYear);
                             }
@@ -561,9 +571,8 @@
                 .call(d3.drag()
                         .on("start drag", function() {
                             var newYear = parseInt(yearScale(d3.event.x));
-                            assetsHandle.attr("x", d3.event.x);
-
                             if (newYear != currentYear && newYear >= 1934 && newYear <= 2016) {
+                              assetsHandle.attr("x", d3.event.x);
                               currentYear = newYear;
                               updateMap(newYear);
                             }
