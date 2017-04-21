@@ -709,11 +709,11 @@
                           averagePopulation[8] += populationData[a]['2010'] / 50;
                       };
                   }
-                  
+
 
                   var populationExtentAvg = d3.extent(averagePopulation);
                   var populationExtent = totalPopulationMinMax(populationData);
-                  
+
 
                   var assetExtent = d3.extent(averageAssets);
 
@@ -736,7 +736,7 @@
                     .attr("class", "axisAssets")
                     .call(d3.axisLeft(yScale3)
                       .ticks(4)
-                      .tickFormat(d3.format(".2s")));
+                      .tickFormat(d3.format(".1s")));
                   var areaAverageAsset = d3.area()
                     .x(function(d) { return xScale2(scaleAssetIndex(averageAssets.indexOf(d))) })
                     .y1(function(d) { return yScale3(d) })
@@ -804,7 +804,6 @@
                     .call(d3.axisBottom(xScale2))
                   var yScale2AcqAvg = d3.scaleLinear().domain(acquisitionExtent).range([70,0]);
                   svg2.append("g")
-
                     .attr("transform", "translate(40, 255)")
                     .attr("id", "yAxisAcq")
                     .call(d3.axisLeft(yScale2AcqAvg)
@@ -814,7 +813,7 @@
                     .attr("id", "yAxis2")
                     .call(d3.axisLeft(yScale2AcqAvg)
                       .ticks(4)
-                      .tickFormat(d3.format(".2s")));
+                      .tickFormat(d3.format(".1s")));
                   svg2.append("text") // Label
                      .attr("transform", "rotate(-90)")
                      .attr("x", -290)
@@ -832,123 +831,130 @@
                     .attr("fill", "#a9a9a9")
                     .attr("id", "g2Handle")
 
-                    var countie = 0;
-                    var acquisitionLine = d3.area()
+                  var countie = 0;
+                  var acquisitionLine = d3.area()
                     .x(function(d) { countie++; return xScale2(scaleAssetIndex(countie-1)) })
                     .y1(function(d) { return yScale2AcqAvg(d) })
                     .y0(70)
-                    svg2.append("path")
+                  svg2.append("path")
                     .datum(averageAcq)
                     .attr("id", "acquisitionLine")
-                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#f2c830")
+                    .attr("stroke-width", 1)
+                    .attr("fill", "none")
                     .attr("d", acquisitionLine)
-                    .attr("transform", "translate(40, 255)");
+                    .attr("transform", "translate("+svg2Padding+", 255)");
 
-                    var payoutExtent = d3.extent(averagePayout);
-                    var yScale2PayoutAvg = d3.scaleLinear().domain(payoutExtent).range([70,0]);
-                    var countie2 = 0;
-                    var payoutLine = d3.area()
+                  var payoutExtent = d3.extent(averagePayout);
+                  var yScale2PayoutAvg = d3.scaleLinear().domain(payoutExtent).range([70,0]);
+                  var countie2 = 0;
+                  var payoutLine = d3.area()
                     .x(function(d) { countie2++; return xScale2(scaleAssetIndex(countie2-1)) })
                     .y1(function(d) { return yScale2PayoutAvg(d) })
                     .y0(70)
-                    svg2.append("path")
+                  svg2.append("path")
                     .datum(averagePayout)
                     .attr("id", "payoutLine")
-                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff7f00")
+                    .attr("stroke-width", 1)
+                    .attr("fill", "none")
                     .attr("d", payoutLine)
-                    .attr("transform", "translate(40, 255)");
+                    .attr("transform", "translate("+svg2Padding+", 255)");
 
-                     var transferExtent = d3.extent(averageTransfer);
-                    var yScale2TransferAvg = d3.scaleLinear().domain(transferExtent).range([70,0]);
-                    var countie3 = 0;
-                    var transferLine = d3.area()
+                  var transferExtent = d3.extent(averageTransfer);
+                  var yScale2TransferAvg = d3.scaleLinear().domain(transferExtent).range([70,0]);
+                  var countie3 = 0;
+                  var transferLine = d3.area()
                     .x(function(d) { countie3++; return xScale2(scaleAssetIndex(countie3-1)) })
                     .y1(function(d) { return yScale2TransferAvg(d) })
                     .y0(70)
-                    svg2.append("path")
+                  svg2.append("path")
                     .datum(averageTransfer)
                     .attr("id", "transferLine")
-                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#8f00ff")
+                    .attr("stroke-width", 1)
+                    .attr("fill", "none")
                     .attr("d", transferLine)
-                    .attr("transform", "translate(40, 255)");
+                    .attr("transform", "translate("+svg2Padding+", 255)");
 
-                    var managementExtent = d3.extent(averageManagement);
-                    var yScale2ManagementAvg = d3.scaleLinear().domain(managementExtent).range([70,0]);
-                    var countie4 = 0;
-                    var managementLine = d3.area()
+                  var managementExtent = d3.extent(averageManagement);
+                  var yScale2ManagementAvg = d3.scaleLinear().domain(managementExtent).range([70,0]);
+                  var countie4 = 0;
+                  var managementLine = d3.area()
                     .x(function(d) { countie4++; return xScale2(scaleAssetIndex(countie4-1)) })
                     .y1(function(d) { return yScale2ManagementAvg(d) })
                     .y0(70)
-                    svg2.append("path")
+                  svg2.append("path")
                     .datum(averageManagement)
                     .attr("id", "managementLine")
-                    .attr("fill-opacity", ".01")
+                    .attr("stroke", "#ff00ff")
+                    .attr("stroke-width", 1)
+                    .attr("fill", "none")
                     .attr("d", managementLine)
-                    .attr("transform", "translate(40, 255)");
+                    .attr("transform", "translate("+svg2Padding+", 255)");
 
-                    svg2.append("rect")
-                      .attr("x", 55)
-                      .attr("y", 360)
-                      .attr("height", 2)
-                      .attr("width", 15)
-                      .attr("fill", "#f2c830")
-                    svg2.append("text")
-                      .attr("x", 75)
-                      .attr("y", 365)
-                      .attr("fill", "#ccc")
-                      .style("font-size", 12)
-                      .text("Acquisition")
-                    svg2.append("rect")
-                      .attr("x", 150)
-                      .attr("y", 360)
-                      .attr("height", 2)
-                      .attr("width", 15)
-                      .attr("fill", "#ff7f00")
-                    svg2.append("text")
-                      .attr("x", 170)
-                      .attr("y", 365)
-                      .attr("fill", "#ccc")
-                      .style("font-size", 12)
-                      .text("Payout")
-                    svg2.append("rect")
-                      .attr("x", 230)
-                      .attr("y", 360)
-                      .attr("height", 2)
-                      .attr("width", 15)
-                      .attr("fill", "#8f00ff")
-                    svg2.append("text")
-                      .attr("x", 250)
-                      .attr("y", 365)
-                      .attr("fill", "#ccc")
-                      .style("font-size", 12)
-                      .text("Transfer")
-                    svg2.append("rect")
-                      .attr("x", 315)
-                      .attr("y", 360)
-                      .attr("height", 2)
-                      .attr("width", 15)
-                      .attr("fill", "#ff00ff")
-                    svg2.append("text")
-                      .attr("x", 335)
-                      .attr("y", 365)
-                      .attr("fill", "#ccc")
-                      .style("font-size", 12)
-                      .text("Management")
+                  svg2.append("rect")
+                    .attr("x", 55)
+                    .attr("y", 360)
+                    .attr("height", 2)
+                    .attr("width", 15)
+                    .attr("fill", "#f2c830")
+                  svg2.append("text")
+                    .attr("x", 75)
+                    .attr("y", 365)
+                    .attr("fill", "#ccc")
+                    .style("font-size", 12)
+                    .text("Acquisition")
+                  svg2.append("rect")
+                    .attr("x", 150)
+                    .attr("y", 360)
+                    .attr("height", 2)
+                    .attr("width", 15)
+                    .attr("fill", "#ff7f00")
+                  svg2.append("text")
+                    .attr("x", 170)
+                    .attr("y", 365)
+                    .attr("fill", "#ccc")
+                    .style("font-size", 12)
+                    .text("Payout")
+                  svg2.append("rect")
+                    .attr("x", 230)
+                    .attr("y", 360)
+                    .attr("height", 2)
+                    .attr("width", 15)
+                    .attr("fill", "#8f00ff")
+                  svg2.append("text")
+                    .attr("x", 250)
+                    .attr("y", 365)
+                    .attr("fill", "#ccc")
+                    .style("font-size", 12)
+                    .text("Transfer")
+                  svg2.append("rect")
+                    .attr("x", 315)
+                    .attr("y", 360)
+                    .attr("height", 2)
+                    .attr("width", 15)
+                    .attr("fill", "#ff00ff")
+                  svg2.append("text")
+                    .attr("x", 335)
+                    .attr("y", 365)
+                    .attr("fill", "#ccc")
+                    .style("font-size", 12)
+                    .text("Management")
 
-                    var privateExtent = d3.extent(averagePrivatization);
-                    var yScale2PrivatizationAvg = d3.scaleLinear().domain(privateExtent).range([70,0]);
-                    var countie5 = 0;
-                    var privatizationLine = d3.area()
+                  var privateExtent = d3.extent(averagePrivatization);
+                  var yScale2PrivatizationAvg = d3.scaleLinear().domain(privateExtent).range([70,0]);
+                  var countie5 = 0;
+                  var privatizationLine = d3.area()
                     .x(function(d) { countie5++; return xScale2(scaleAssetIndex(countie5-1)) })
                     .y1(function(d) { return yScale2PrivatizationAvg(d) })
                     .y0(70)
-                    svg2.append("path")
+                  svg2.append("path")
                     .datum(averagePrivatization)
                     .attr("id", "privatizationLine")
                     .attr("fill-opacity", ".01")
                     .attr("d", privatizationLine)
                     .attr("transform", "translate(40, 265)");
-
 
                 // Graph 3
                 svg2.append("g")
@@ -1034,7 +1040,7 @@
                     .attr("transform", "translate(55, 555)")
                     .call(d3.axisLeft(yScale3)
                       .ticks(4)
-                      .tickFormat(d3.format(".2s")));
+                      .tickFormat(d3.format(".1s")));
                 svg2.append("text") // Label
                    .attr("transform", "rotate(-90)")
                    .attr("x", -590)
@@ -1042,7 +1048,7 @@
                    .style("text-anchor","middle")
                    .style("font-size", 12)
                    .style("fill", "#cccccc")
-                   .text("Institution Type");
+                   .text("Bank Type");
                 var g4Handle = svg2.insert("rect")
                   .attr("height", 70)
                   .attr("width", 1)
@@ -1052,120 +1058,120 @@
                   .attr("fill", "#a9a9a9")
                   .attr("id", "g4Handle")
 
-                  svg2.append("text")
-                      .attr("x", 350)
-                      .attr("y", 660)
-                      .attr("fill", "#ccc")
-                      .style("font-size", 12)
-                      .text("Commercial Banks")
-                    svg2.append("rect")
-                      .attr("x", 330)
-                      .attr("y", 655)
-                      .attr("height", 2)
-                      .attr("width", 15)
-                      .attr("fill", "#ff6666")
-                    svg2.append("text")
-                      .attr("x", 200)
-                      .attr("y", 660)
-                      .attr("fill", "#ccc")
-                      .style("font-size", 12)
-                      .text("Savings Association")
-                      svg2.append("rect")
-                      .attr("x", 180)
-                      .attr("y", 655)
-                      .attr("height", 2)
-                      .attr("width", 15)
-                      .attr("fill", "#ff00ff")
-                      svg2.append("text")
-                      .attr("x", 80)
-                      .attr("y", 660)
-                      .attr("fill", "#ccc")
-                      .style("font-size", 12)
-                      .text("Savings Banks")
-                      svg2.append("rect")
-                      .attr("x", 60)
-                      .attr("y", 655)
-                      .attr("height", 2)
-                      .attr("width", 15)
-                      .attr("fill", "#8f00ff")
+                svg2.append("text")
+                  .attr("x", 280)
+                  .attr("y", 665)
+                  .attr("fill", "#ccc")
+                  .style("font-size", 12)
+                  .text("Commercial")
+                svg2.append("rect")
+                  .attr("x", 260)
+                  .attr("y", 660)
+                  .attr("height", 2)
+                  .attr("width", 15)
+                  .attr("fill", "#ff6666")
+                svg2.append("text")
+                  .attr("x", 160)
+                  .attr("y", 665)
+                  .attr("fill", "#ccc")
+                  .style("font-size", 12)
+                  .text("Savings Assoc.")
+                svg2.append("rect")
+                  .attr("x", 140)
+                  .attr("y", 660)
+                  .attr("height", 2)
+                  .attr("width", 15)
+                  .attr("fill", "#ff00ff")
+                svg2.append("text")
+                  .attr("x", 80)
+                  .attr("y", 665)
+                  .attr("fill", "#ccc")
+                  .style("font-size", 12)
+                  .text("Savings")
+                svg2.append("rect")
+                  .attr("x", 60)
+                  .attr("y", 660)
+                  .attr("height", 2)
+                  .attr("width", 15)
+                  .attr("fill", "#8f00ff")
 
-                  var commercialExtent = d3.extent(averageCommercial);
-                    var yScale2CommercialAvg = d3.scaleLinear().domain(commercialExtent).range([70,0]);
-                    var index = 0;
-                    var commercialLine = d3.area()
-                    .x(function(d) { index++; return xScale2(scaleAssetIndex(index-1)) })
-                    .y1(function(d) { return yScale2CommercialAvg(d) })
-                    .y0(70)
+                var commercialExtent = d3.extent(averageCommercial);
+                var yScale2CommercialAvg = d3.scaleLinear().domain(commercialExtent).range([70,0]);
+                var index = 0;
+                var commercialLine = d3.area()
+                  .x(function(d) { index++; return xScale2(scaleAssetIndex(index-1)) })
+                  .y1(function(d) { return yScale2CommercialAvg(d) })
+                  .y0(70)
 
-                    svg2.append("path")
-                    .datum(averageCommercial)
-                    .attr("id", "commercialLine")
-                    .attr("fill-opacity", ".01")
-                    .attr("d", commercialLine)
-                    .attr("transform", "translate(55, 555)");
+                svg2.append("path")
+                  .datum(averageCommercial)
+                  .attr("id", "commercialLine")
+                  .attr("stroke", "#ff6666")
+                  .attr("stroke-width", 1)
+                  .attr("fill", "none")
+                  .attr("d", commercialLine)
+                  .attr("transform", "translate("+svg2Padding+", 555)");
 
-                    var savingsAssocExtent = d3.extent(averageSavingsAssoc);
-                    var yScale2SavingsAssocAvg = d3.scaleLinear().domain(savingsAssocExtent).range([70,0]);
-                    var index2 = 0;
-                    var savingsAssocLine = d3.area()
-                    .x(function(d) { index2++; return xScale2(scaleAssetIndex(index2-1)) })
-                    .y1(function(d) { return yScale2SavingsAssocAvg(d) })
-                    .y0(70)
+                var savingsAssocExtent = d3.extent(averageSavingsAssoc);
+                var yScale2SavingsAssocAvg = d3.scaleLinear().domain(savingsAssocExtent).range([70,0]);
+                var index2 = 0;
+                var savingsAssocLine = d3.area()
+                  .x(function(d) { index2++; return xScale2(scaleAssetIndex(index2-1)) })
+                  .y1(function(d) { return yScale2SavingsAssocAvg(d) })
+                  .y0(70)
 
-                    svg2.append("path")
-                    .datum(averageSavingsAssoc)
-                    .attr("id", "savingsAssocLine")
-                    .attr("fill-opacity", ".01")
-                    .attr("d", savingsAssocLine)
-                    .attr("transform", "translate(55, 555)");
+                svg2.append("path")
+                  .datum(averageSavingsAssoc)
+                  .attr("id", "savingsAssocLine")
+                  .attr("stroke", "#ff00ff")
+                  .attr("stroke-width", 1)
+                  .attr("fill", "none")
+                  .attr("d", savingsAssocLine)
+                  .attr("transform", "translate("+svg2Padding+", 555)");
 
-                    var savingsBankExtent = d3.extent(averageSavingsBanks);
-                    var yScale2SavingsBankAvg = d3.scaleLinear().domain(savingsBankExtent).range([70,0]);
-                    var index3 = 0;
-                    var savingsBankLine = d3.area()
-                    .x(function(d) { index3++; return xScale2(scaleAssetIndex(index3-1)) })
-                    .y1(function(d) { return yScale2SavingsBankAvg(d) })
-                    .y0(70)
+                var savingsBankExtent = d3.extent(averageSavingsBanks);
+                var yScale2SavingsBankAvg = d3.scaleLinear().domain(savingsBankExtent).range([70,0]);
+                var index3 = 0;
+                var savingsBankLine = d3.area()
+                  .x(function(d) { index3++; return xScale2(scaleAssetIndex(index3-1)) })
+                  .y1(function(d) { return yScale2SavingsBankAvg(d) })
+                  .y0(70)
 
-                    svg2.append("path")
-                    .datum(averageSavingsBanks)
-                    .attr("id", "savingsBankLine")
-                    .attr("fill-opacity", ".01")
-                    .attr("d", savingsBankLine)
-                    .attr("transform", "translate(55, 555)");
+                svg2.append("path")
+                  .datum(averageSavingsBanks)
+                  .attr("id", "savingsBankLine")
+                  .attr("stroke", "#8f00ff")
+                  .attr("stroke-width", 1)
+                  .attr("fill", "none")
+                  .attr("d", savingsBankLine)
+                  .attr("transform", "translate("+svg2Padding+", 555)");
 
-                  var title = svg2.append("text")
-                      .attr("id", "svg2_title")
-                      .attr("x", 0)
-                      .attr("y", 24)
-                      .style("font-size", "22px")
-                      .style("font-weight", 700)
-                      .style("font-family", "'Alfa Slab One', sans-serif")
-                      .text("United States Average Data");
+                var title = svg2.append("text")
+                    .attr("id", "svg2_title")
+                    .attr("x", 0)
+                    .attr("y", 24)
+                    .style("font-size", "22px")
+                    .style("font-weight", 700)
+                    .style("font-family", "'Alfa Slab One', sans-serif")
+                    .text("United States Average Data");
 
                 function zoomInfo(d){
                   popData = [];
                   var state = popIndexMap.get(d.id);
-
                   stateName.text(state.State);
                   stateName2.text(state.State);
                   title.text(state.State + " Data");
-
-
-
                   //grab the population data of the clicked state
                   for(var i = 1930; i <= 2010; i= i + 10){
                       year = String(i);
                       popData.push(state[year]);
                   }
                   stateid = d.id;
-                  if (stateid<10){stateid = '0' + stateid;}
+                  if (stateid<10){ stateid = '0' + stateid; }
                   stateid = 's'+stateid;
                   //Population Graph
                   var stateArray = stat[stateid];
                   var popArray = popData;
-
- 
                   var areaThisPopulation = d3.area()
                     .x(function(d) { return xScale2(scalePopulationIndex(popArray.indexOf(d))) })
                     .y1(function(d) { return yScale2Pop(d) })
@@ -1174,272 +1180,240 @@
                   d3.select("path#populationLine")
                   .datum(popArray)
                   .attr("opacity", ".5")
-                  .attr("transform", "translate("+svg2Padding+", 405)")
                   .transition()
                     .attr("d", areaThisPopulation)
                     .duration(500);
                     //AssetGraph
-                var assetArray = []
-                for(var num = 0; num < 90; num++){
-                      assetArray[num] = 0;
-                  }
+                  var assetArray = []
+                  for (var num = 0; num < 90; num++) { assetArray[num] = 0; }
                   for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year].numAssets)) {
-                              assetArray[year] += stateArray[year].numAssets;
-                          }
-                      }
-                var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                var assetArrayExtent = d3.extent(assetArray);
-                var yScaleAsset = d3.scaleLinear().domain(assetArrayExtent).range([70,0]);
-                var counter =-1;
-               var areaThisStateAsset = d3.area()
+                    if(!isNaN(stateArray[year].numAssets)) {
+                      assetArray[year] += stateArray[year].numAssets;
+                    }
+                  }
+                  var scaleThisAssetIndex = d3.scaleLinear().domain([0,assetArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var assetArrayExtent = d3.extent(assetArray);
+                  var yScaleAsset = d3.scaleLinear().domain(assetArrayExtent).range([70,0]);
+                  var counter =-1;
+                  var areaThisStateAsset = d3.area()
                     .x(function(d) { counter++; return xScale2(scaleThisAssetIndex(counter)) })
                     .y1(function(d) {  return yScaleAsset(d) })
                     .y0(70)
 
-                d3.select("path#assetLine")
-                  .datum(assetArray)
-                  .attr("fill", "#ff9999")
-                  .attr("opacity", ".5")
-                  .attr("transform", "translate("+svg2Padding+", 100)")
-                  .transition()
-                    .attr("d", areaThisStateAsset)
-                    .duration(500);
+                  d3.select("path#assetLine")
+                    .datum(assetArray)
+                    .attr("fill", "#ff9999")
+                    .attr("opacity", ".5")
+                    .attr("transform", "translate("+svg2Padding+", 100)")
+                    .transition()
+                      .attr("d", areaThisStateAsset)
+                      .duration(500);
 
-
-                    //graph2? Acquisitions vs payout vs transfers vs management vs privitazation
-
-                     var acqArray = []
-                for(var num = 0; num < 90; num++){
-                      acqArray[num] = 0;
-                  }
+                  // Update Graph 2
+                  var acqArray = []
+                  for (var num = 0; num < 90; num++) { acqArray[num] = 0; }
                   for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year].ACQUISITION)) {
-                              acqArray[year] += stateArray[year].ACQUISITION;
-                          }
-                      }
-                    var acquisitionExtent = d3.extent(acqArray);
-                    var yScale2Acq = d3.scaleLinear().domain(acquisitionExtent).range([70,0]);
-                    var scaleThisAcquisitionIndex = d3.scaleLinear().domain([0,acqArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                   var count = -1
-                    var acquisitionLine = d3.area()
+                    if(!isNaN(stateArray[year].ACQUISITION)) {
+                      acqArray[year] += stateArray[year].ACQUISITION;
+                    }
+                  }
+                  var acquisitionExtent = d3.extent(acqArray);
+                  var yScale2Acq = d3.scaleLinear().domain(acquisitionExtent).range([70,0]);
+                  var scaleThisAcquisitionIndex = d3.scaleLinear().domain([0,acqArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var count = -1
+                  var acquisitionLine = d3.area()
                     .x(function(d) { count++; return xScale2(scaleThisAcquisitionIndex(count-1)) })
                     .y1(function(d) { return yScale2Acq(d) })
                     .y0(70)
 
-                    d3.select("path#acquisitionLine")
+                  d3.select("path#acquisitionLine")
                     .datum(acqArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#f2c830")
-                    .attr("transform", "translate(40, 255)")
+                    .attr("transform", "translate("+svg2Padding+", 255)")
                     .transition()
-                    .attr("d", acquisitionLine)
-                    .duration(500);
+                      .attr("d", acquisitionLine)
+                      .duration(500);
 
-                    var payArray = []
-                for(var num = 0; num < 90; num++){
-                      payArray[num] = 0;
+                  var payArray = []
+                  for (var num = 0; num < 90; num++){  payArray[num] = 0; }
+                  for (year = 0; year < 90; year++){
+                    if(!isNaN(stateArray[year].PAYOUT)) {
+                      payArray[year] += stateArray[year].PAYOUT;
+                    }
                   }
-                  for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year].PAYOUT)) {
-                              payArray[year] += stateArray[year].PAYOUT;
-                          }
-                      }
-                    var payoutExtent = d3.extent(payArray);
-                    var yScale2Payout = d3.scaleLinear().domain(payoutExtent).range([70,0]);
-                    var scaleThisPayoutIndex = d3.scaleLinear().domain([0,payArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                   var count2 = -1
-                    var payoutLine = d3.area()
+                  var payoutExtent = d3.extent(payArray);
+                  var yScale2Payout = d3.scaleLinear().domain(payoutExtent).range([70,0]);
+                  var scaleThisPayoutIndex = d3.scaleLinear().domain([0,payArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var count2 = -1
+                  var payoutLine = d3.area()
                     .x(function(d) { count2++; return xScale2(scaleThisPayoutIndex(count2-1)) })
                     .y1(function(d) { return yScale2Payout(d) })
                     .y0(70)
 
-                    d3.select("path#payoutLine")
+                  d3.select("path#payoutLine")
                     .datum(payArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff7f00")
-                    .attr("transform", "translate(40, 255)")
+                    .attr("transform", "translate("+svg2Padding+", 255)")
                     .transition()
-                    .attr("d", payoutLine)
-                    .duration(500);
+                      .attr("d", payoutLine)
+                      .duration(500);
 
-                    //plot transfers
-                    var transferArray = []
-                for(var num = 0; num < 90; num++){
-                      transferArray[num] = 0;
+                  var transferArray = []
+                  for (var num = 0; num < 90; num++) { transferArray[num] = 0; }
+                  for (year = 0; year < 90; year++) {
+                    if(!isNaN(stateArray[year].TRANSFER)) {
+                      transferArray[year] += stateArray[year].TRANSFER;
+                    }
                   }
-                  for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year].TRANSFER)) {
-                              transferArray[year] += stateArray[year].TRANSFER;
-                          }
-                      }
-                    var transferExtent = d3.extent(transferArray);
-                    var yScale2Transfer = d3.scaleLinear().domain(transferExtent).range([70,0]);
-                    var scaleThisTransferIndex = d3.scaleLinear().domain([0,transferArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                   var count3 = -1
-                    var transferLine = d3.area()
+                  var transferExtent = d3.extent(transferArray);
+                  var yScale2Transfer = d3.scaleLinear().domain(transferExtent).range([70,0]);
+                  var scaleThisTransferIndex = d3.scaleLinear().domain([0,transferArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var count3 = -1
+                  var transferLine = d3.area()
                     .x(function(d) { count3++; return xScale2(scaleThisTransferIndex(count3-1)) })
                     .y1(function(d) { return yScale2Transfer(d) })
                     .y0(70)
 
-                    d3.select("path#transferLine")
+                  d3.select("path#transferLine")
                     .datum(transferArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#8f00ff")
-                    .attr("transform", "translate(40, 255)")
+                    .attr("transform", "translate("+(svg2Padding)+", 255)")
                     .transition()
-                    .attr("d", transferLine)
-                    .duration(500);
+                      .attr("d", transferLine)
+                      .duration(500);
 
-                    //plot Management
-                    var managementArray = []
-                for(var num = 0; num < 90; num++){
-                      managementArray[num] = 0;
+                  var managementArray = []
+                  for (var num = 0; num < 90; num++) { managementArray[num] = 0; }
+                  for (year = 0; year < 90; year++){
+                    if(!isNaN(stateArray[year].MANAGEMENT)) {
+                      managementArray[year] += stateArray[year].MANAGEMENT;
+                    }
                   }
-                  for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year].MANAGEMENT)) {
-                              managementArray[year] += stateArray[year].MANAGEMENT;
-                          }
-                      }
-                    var managementExtent = d3.extent(managementArray);
-                    var yScale2Management = d3.scaleLinear().domain(managementExtent).range([70,0]);
-                    var scaleThisManagementIndex = d3.scaleLinear().domain([0,managementArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-
-                   var count4 = -1
-                    var managementLine = d3.area()
+                  var managementExtent = d3.extent(managementArray);
+                  var yScale2Management = d3.scaleLinear().domain(managementExtent).range([70,0]);
+                  var scaleThisManagementIndex = d3.scaleLinear().domain([0,managementArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var count4 = -1
+                  var managementLine = d3.area()
                     .x(function(d) { count4++; return xScale2(scaleThisManagementIndex(count4-1)) })
                     .y1(function(d) { return yScale2Management(d) })
                     .y0(70)
 
-                    d3.select("path#managementLine")
+                  d3.select("path#managementLine")
                     .datum(managementArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff00ff")
-                    .attr("transform", "translate(40, 255)")
+                    .attr("transform", "translate("+svg2Padding+", 255)")
                     .transition()
-                    .attr("d", managementLine)
-                    .duration(500);
+                      .attr("d", managementLine)
+                      .duration(500);
 
-                    //plot Privatization
-                var privatizationArray = []
-                for(var num = 0; num < 90; num++){
-                      privatizationArray[num] = 0;
+                  var privatizationArray = []
+                  for (var num = 0; num < 90; num++) { privatizationArray[num] = 0;}
+                  for (year = 0; year < 90; year++) {
+                    if(!isNaN(stateArray[year].PRIVATIZATION)) {
+                      privatizationArray[year] += stateArray[year].PRIVATIZATION;
+                    }
                   }
-                  for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year].PRIVATIZATION)) {
-                              privatizationArray[year] += stateArray[year].PRIVATIZATION;
-                          }
-                      }
-                    var privatizationExtent = d3.extent(privatizationArray);
-
-                    var yScale2Privatization = d3.scaleLinear().domain(privatizationExtent).range([70,0]);
-                    var scaleThisPrivatizationIndex = d3.scaleLinear().domain([0,privatizationArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-
-                   var count5 = -1
-                    var privatizationLine = d3.area()
+                  var privatizationExtent = d3.extent(privatizationArray);
+                  var yScale2Privatization = d3.scaleLinear().domain(privatizationExtent).range([70,0]);
+                  var scaleThisPrivatizationIndex = d3.scaleLinear().domain([0,privatizationArray.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var count5 = -1
+                  var privatizationLine = d3.area()
                     .x(function(d) { count5++; return xScale2(scaleThisPrivatizationIndex(count5-1)) })
                     .y1(function(d) { return yScale2Privatization(d) })
                     .y0(70)
 
-                    d3.select("path#privatizationLine")
+                  d3.select("path#privatizationLine")
                     .datum(privatizationArray)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff6666")
-                    .attr("transform", "translate(40, 255)")
+                    .attr("transform", "translate("+svg2Padding+", 255)")
                     .transition()
-                    .attr("d", privatizationLine)
-                    .duration(500);
+                      .attr("d", privatizationLine)
+                      .duration(500);
 
-                    //Graph 4 Data////////////////
-
-                    //plot Commercial banks in that state
-                    var commercialBanks = []
-                    for(var num = 0; num < 90; num++){
-                      commercialBanks[num] = 0;
-                  }
+                  //Graph 4 Data
+                  //plot Commercial banks in that state
+                  var commercialBanks = []
+                  for(var num = 0; num < 90; num++){ commercialBanks[num] = 0; }
                   for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year]['COMMERCIAL BANK'])) {
-                              commercialBanks[year] += stateArray[year]['COMMERCIAL BANK'];
-                          }
-                      }
+                    if(!isNaN(stateArray[year]['COMMERCIAL BANK'])) {
+                      commercialBanks[year] += stateArray[year]['COMMERCIAL BANK'];
+                    }
+                  }
 
-                    var commercialExtent = d3.extent(commercialBanks);
-                    var yScale2Commercial = d3.scaleLinear().domain(commercialExtent).range([70,0]);
-                    var scaleThisCommercialIndex = d3.scaleLinear().domain([0,commercialBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                    var counter1 = 0;
-                    var commercialLine = d3.area()
+                  var commercialExtent = d3.extent(commercialBanks);
+                  var yScale2Commercial = d3.scaleLinear().domain(commercialExtent).range([70,0]);
+                  var scaleThisCommercialIndex = d3.scaleLinear().domain([0,commercialBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var counter1 = 0;
+                  var commercialLine = d3.area()
                     .x(function(d) { counter1++; return xScale2(scaleThisCommercialIndex(counter1-1)) })
                     .y1(function(d) { return yScale2Commercial(d) })
                     .y0(70)
 
-                      d3.select("path#commercialLine")
-                      .datum(commercialBanks)
+                  d3.select("path#commercialLine")
+                    .datum(commercialBanks)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff6666")
-                    .attr("transform", "translate(55, 555)")
+                    .attr("transform", "translate("+svg2Padding+", 555)")
                     .transition()
                     .attr("d", commercialLine)
                     .duration(500);
 
-                    //graph Savings Association data
+                  //graph Savings Association data
                   var savingsAssocBanks = []
-                    for(var num = 0; num < 90; num++){
-                      savingsAssocBanks[num] = 0;
-                  }
+                  for(var num = 0; num < 90; num++){ savingsAssocBanks[num] = 0; }
                   for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year]['SAVINGS ASSOCIATION'])) {
-                              savingsAssocBanks[year] += stateArray[year]['SAVINGS ASSOCIATION'];
-                          }
-                      }
-
-                    var savingsAssocExtent = d3.extent(savingsAssocBanks);
-                    var yScale2SavingsAssoc = d3.scaleLinear().domain(savingsAssocExtent).range([70,0]);
-                    var scaleThisSavingsAssocIndex = d3.scaleLinear().domain([0,savingsAssocBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                    var counter2 = 0;
-                    var savingsAssocLine = d3.area()
+                    if(!isNaN(stateArray[year]['SAVINGS ASSOCIATION'])) {
+                      savingsAssocBanks[year] += stateArray[year]['SAVINGS ASSOCIATION'];
+                    }
+                  }
+                  var savingsAssocExtent = d3.extent(savingsAssocBanks);
+                  var yScale2SavingsAssoc = d3.scaleLinear().domain(savingsAssocExtent).range([70,0]);
+                  var scaleThisSavingsAssocIndex = d3.scaleLinear().domain([0,savingsAssocBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var counter2 = 0;
+                  var savingsAssocLine = d3.area()
                     .x(function(d) { counter2++; return xScale2(scaleThisSavingsAssocIndex(counter2-1)) })
                     .y1(function(d) { return yScale2SavingsAssoc(d) })
                     .y0(70)
 
-                      d3.select("path#savingsAssocLine")
-                      .datum(savingsAssocBanks)
+                  d3.select("path#savingsAssocLine")
+                    .datum(savingsAssocBanks)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#ff00ff")
-                    .attr("transform", "translate(55, 555)")
+                    .attr("transform", "translate("+svg2Padding+", 555)")
                     .transition()
                     .attr("d", savingsAssocLine)
                     .duration(500);
 
-                    //graph Savings Banks data
+                  //graph Savings Banks data
                   var savingsBanks = []
-                    for(var num = 0; num < 90; num++){
-                      savingsBanks[num] = 0;
-                  }
+                  for(var num = 0; num < 90; num++){ savingsBanks[num] = 0; }
                   for(year = 0; year < 90; year++){
-                          if(!isNaN(stateArray[year]['SAVINGS BANK'])) {
-                              savingsBanks[year] += stateArray[year]['SAVINGS BANK'];
-                          }
-                      }
-
-                    var savingsBankExtent = d3.extent(savingsBanks);
-                    var yScale2SavingsBank = d3.scaleLinear().domain(savingsBankExtent).range([70,0]);
-                    var scaleThisSavingsBankIndex = d3.scaleLinear().domain([0,savingsBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
-                    var counter3 = 0;
-                    var savingsBankLine = d3.area()
+                    if(!isNaN(stateArray[year]['SAVINGS BANK'])) {
+                      savingsBanks[year] += stateArray[year]['SAVINGS BANK'];
+                    }
+                  }
+                  var savingsBankExtent = d3.extent(savingsBanks);
+                  var yScale2SavingsBank = d3.scaleLinear().domain(savingsBankExtent).range([70,0]);
+                  var scaleThisSavingsBankIndex = d3.scaleLinear().domain([0,savingsBanks.length-1]).range([new Date(1934,0,1),new Date(2016,0,1)]);
+                  var counter3 = 0;
+                  var savingsBankLine = d3.area()
                     .x(function(d) { counter3++; return xScale2(scaleThisSavingsAssocIndex(counter3-1)) })
                     .y1(function(d) { return yScale2SavingsBank(d) })
                     .y0(70)
 
-                      d3.select("path#savingsBankLine")
-                      .datum(savingsBanks)
+                  d3.select("path#savingsBankLine")
+                    .datum(savingsBanks)
                     .attr("fill-opacity", ".01")
                     .attr("stroke", "#8f00ff")
-                    .attr("transform", "translate(55, 555)")
+                    .attr("transform", "translate("+svg2Padding+", 555)")
                     .transition()
                     .attr("d", savingsBankLine)
                     .duration(500);
-
-
                 }
 
                 var yearMin = Intl.NumberFormat().format(parseInt(yearMinMax[0]+"000"));
